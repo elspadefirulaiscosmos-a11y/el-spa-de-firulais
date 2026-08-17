@@ -196,111 +196,590 @@ function loadImage(src){
 }
 async function downloadImage(type){
   const jpg = type==="calendarJpg";
-  const w=2200, h=720;
-  const scale=2;
-  const c=document.createElement("canvas");
-  c.width=w*scale; c.height=h*scale;
-  const ctx=c.getContext("2d");
-  ctx.scale(scale,scale);
+
+  // Formato vertical para Historias
+  const w = 1080;
+  const h = 1920;
+
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+
+  const ctx = c.getContext("2d");
+
   try{
-    const [logo,dog,cat,guinea,rabbit]=await Promise.all([
-      loadImage(LOGO), loadImage(PET_IMAGES.dog), loadImage(PET_IMAGES.cat),
-      loadImage(PET_IMAGES.guinea), loadImage(PET_IMAGES.rabbit)
+    const [logo,dog,cat,guinea,rabbit] = await Promise.all([
+      loadImage(LOGO),
+      loadImage(PET_IMAGES.dog),
+      loadImage(PET_IMAGES.cat),
+      loadImage(PET_IMAGES.guinea),
+      loadImage(PET_IMAGES.rabbit)
     ]);
-    drawFullCalendar(ctx,w,h,logo,{dog,cat,guinea,rabbit});
-    const mime=jpg?"image/jpeg":"image/png";
-    const dataUrl=c.toDataURL(mime, jpg ? 0.96 : undefined);
-    const a=document.createElement("a");
-    a.href=dataUrl;
-    a.download=jpg ? "El_Spa_de_Firulais_Calendario.jpg" : "El_Spa_de_Firulais_Calendario.png";
-    a.style.display="none";
+
+    drawFullCalendarStory(ctx,w,h,logo,{
+      dog,
+      cat,
+      guinea,
+      rabbit
+    });
+
+    const mime = jpg ? "image/jpeg" : "image/png";
+
+    const dataUrl = c.toDataURL(
+      mime,
+      jpg ? 0.96 : undefined
+    );
+
+    const a = document.createElement("a");
+
+    a.href = dataUrl;
+
+    a.download = jpg
+      ? "El_Spa_de_Firulais_Historia_1080x1920.jpg"
+      : "El_Spa_de_Firulais_Historia_1080x1920.png";
+
+    a.style.display = "none";
+
     document.body.appendChild(a);
+
     a.click();
-    setTimeout(()=>a.remove(),1000);
+
+    setTimeout(()=>{
+      a.remove();
+    },1000);
+
   }catch(err){
-    console.error("Error al descargar calendario:",err);
-    alert("No se pudo generar la imagen. Recarga la página y vuelve a intentarlo.");
+
+    console.error(
+      "Error al descargar calendario:",
+      err
+    );
+
+    alert(
+      "No se pudo generar la imagen. Recarga la página y vuelve a intentarlo."
+    );
   }
 }
-function drawFullCalendar(ctx,w,h,logo,petImages){
- const pad=35;
- ctx.fillStyle="#fff7fa";ctx.fillRect(0,0,w,h);
- ctx.fillStyle="#fff";roundRect(ctx,pad,18,w-pad*2,h-36,30,true);
 
- ctx.drawImage(logo,55,42,115,115);
- ctx.fillStyle="#542b3a";ctx.textAlign="left";ctx.font="bold 38px Arial";
- ctx.fillText("El Spa de Firulais",190,78);
- ctx.fillStyle="#8a6674";ctx.font="20px Arial";
- ctx.fillText("Disponibilidad de la semana",190,110);
- ctx.fillStyle="#e96891";ctx.font="bold 18px Arial";
- ctx.fillText(`${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,190,139);
 
- const left=45, top=175, timeW=105, right=45, dayW=(w-left-right-timeW)/6, rowH=70;
- const times=normalTimes;
+function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
- ctx.fillStyle="#fff0f6";roundRect(ctx,left,top,timeW,50,8,true);
- ctx.fillStyle="#542b3a";ctx.textAlign="center";ctx.font="bold 15px Arial";
- ctx.fillText("HORA",left+timeW/2,top+31);
- days.forEach((d,i)=>{
-   const xx=left+timeW+i*dayW;
-   ctx.fillStyle="#fff0f6";ctx.fillRect(xx,top,dayW,50);
-   ctx.fillStyle="#542b3a";ctx.fillText(d.toUpperCase(),xx+dayW/2,top+31);
- });
+  // Fondo
+  ctx.fillStyle = "#fff7fa";
+  ctx.fillRect(0,0,w,h);
 
- times.forEach((t,r)=>{
-   const yy=top+50+r*rowH;
-   ctx.fillStyle="#fff";ctx.fillRect(left,yy,timeW,rowH);
-   ctx.fillStyle="#765865";ctx.font="13px Arial";ctx.textAlign="center";
-   ctx.fillText(displayTime(t),left+timeW/2,yy+29);
-   ctx.strokeStyle="#ead9e0";ctx.lineWidth=1;ctx.strokeRect(left,yy,timeW,rowH);
-   for(let di=0;di<6;di++){
-     const xx=left+timeW+di*dayW;
-     ctx.fillStyle="#fff";ctx.fillRect(xx,yy,dayW,rowH);
-     ctx.strokeStyle="#ead9e0";ctx.strokeRect(xx,yy,dayW,rowH);
-   }
- });
- for(let r=saturdayTimes.length;r<times.length;r++){
-   const yy=top+50+r*rowH, xx=left+timeW+5*dayW;
-   ctx.fillStyle="#faf7f9";ctx.fillRect(xx+1,yy+1,dayW-2,rowH-2);
- }
+  // Tarjeta principal
+  ctx.fillStyle = "#ffffff";
 
- const colorMap={30:"#f8d8e4",60:"#cfe8ff",90:"#fff0b8",120:"#cfeccf",150:"#e3d4f7",180:"#ffd9bd",210:"#c9eee9",240:"#d8e2ff",270:"#f5d2e8",300:"#e7e3bd",330:"#cde3d0",360:"#d3d8f4",390:"#f2d3c5",420:"#c9e5ed",450:"#ead1ef",480:"#e4d8c7"};
+  roundRect(
+    ctx,
+    28,
+    25,
+    w-56,
+    h-50,
+    30,
+    true
+  );
 
- const jobs=[];
- for(let di=0;di<6;di++){
-   const timesDay=timesFor(di);
-   timesDay.forEach((t,idx)=>{
-     const a=data[key(di,t)];
-     if(a && a.start===t) jobs.push({a,di,idx});
-   });
- }
- for(const job of jobs){
-   const {a,di,idx}=job;
-   const visualSlots=Math.ceil((Number(a.duration)||60)/GRID_MINUTES);
-   const xx=left+timeW+di*dayW, yy=top+50+idx*rowH, height=Math.max(rowH,visualSlots*rowH)-6;
-   ctx.fillStyle=colorMap[a.duration]||"#ffd6e3";
-   roundRect(ctx,xx+4,yy+4,dayW-8,height,11,true);
-   const animal=petImages[a.petType||"dog"]||petImages.dog;
-   ctx.drawImage(animal,xx+9,yy+6,30,30);
-   ctx.fillStyle="#542b3a";ctx.textAlign="left";
-   ctx.font="bold 15px Arial";ctx.fillText(a.name,xx+44,yy+25);
-   ctx.font="12px Arial";ctx.fillText(formatDuration(a.duration),xx+13,yy+43);
-   ctx.font="bold 11px Arial";ctx.fillText("Termina "+displayTime(addMinutes(a.start,a.duration)),xx+13,yy+58);
- }
 
- const ly=top+50+times.length*rowH+14;
- ctx.textAlign="left";ctx.fillStyle="#765865";ctx.font="bold 12px Arial";
- ctx.fillText("COLORES SEGÚN DURACIÓN:",left,ly);
- const legendItems=[["1 h","#cfe8ff"],["1 h 30","#fff0b8"],["2 h","#cfeccf"],["2 h 30","#e3d4f7"],["3 h","#ffd9bd"],["4 h","#d8e2ff"],["8 h","#e4d8c7"]];
- let lx=left+180;
- legendItems.forEach(([label,color])=>{
-   ctx.fillStyle=color;roundRect(ctx,lx,ly-13,18,18,5,true);
-   ctx.fillStyle="#765865";ctx.font="11px Arial";ctx.fillText(label,lx+24,ly+1);lx+=78;
- });
- ctx.textAlign="right";ctx.fillStyle="#e96891";ctx.font="italic bold 17px Arial";
- ctx.fillText("Agenda tu cita 🐾",w-55,h-22);
+  // =========================
+  // ENCABEZADO
+  // =========================
+
+  ctx.drawImage(
+    logo,
+    55,
+    55,
+    120,
+    120
+  );
+
+  ctx.fillStyle = "#542b3a";
+  ctx.textAlign = "left";
+
+  ctx.font = "bold 42px Arial";
+
+  ctx.fillText(
+    "El Spa de Firulais",
+    195,
+    92
+  );
+
+  ctx.fillStyle = "#8a6674";
+
+  ctx.font = "24px Arial";
+
+  ctx.fillText(
+    "DISPONIBILIDAD DE LA SEMANA",
+    195,
+    130
+  );
+
+  ctx.fillStyle = "#e96891";
+
+  ctx.font = "bold 20px Arial";
+
+  ctx.fillText(
+    `${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,
+    195,
+    163
+  );
+
+
+  // =========================
+  // CALENDARIO
+  // =========================
+
+  const left = 45;
+  const right = 45;
+
+  const top = 205;
+
+  const timeW = 125;
+
+  const headerH = 62;
+
+  const dayW =
+    (w-left-right-timeW)/6;
+
+  const rowH = 105;
+
+
+  // Encabezado HORA
+  ctx.fillStyle = "#fff0f6";
+
+  roundRect(
+    ctx,
+    left,
+    top,
+    timeW,
+    headerH,
+    10,
+    true
+  );
+
+  ctx.fillStyle = "#542b3a";
+
+  ctx.textAlign = "center";
+
+  ctx.font = "bold 18px Arial";
+
+  ctx.fillText(
+    "HORA",
+    left + timeW/2,
+    top + 39
+  );
+
+
+  // Días
+  days.forEach((d,i)=>{
+
+    const x =
+      left +
+      timeW +
+      i*dayW;
+
+    ctx.fillStyle = "#fff0f6";
+
+    ctx.fillRect(
+      x,
+      top,
+      dayW,
+      headerH
+    );
+
+    ctx.fillStyle = "#542b3a";
+
+    ctx.font = "bold 16px Arial";
+
+    ctx.fillText(
+      d.toUpperCase(),
+      x + dayW/2,
+      top + 39
+    );
+
+  });
+
+
+  // =========================
+  // FILAS DE HORARIOS
+  // =========================
+
+  const times = normalTimes;
+
+  times.forEach((t,r)=>{
+
+    const y =
+      top +
+      headerH +
+      r*rowH;
+
+
+    // Hora
+    ctx.fillStyle = "#ffffff";
+
+    ctx.fillRect(
+      left,
+      y,
+      timeW,
+      rowH
+    );
+
+    ctx.strokeStyle = "#ead9e0";
+
+    ctx.lineWidth = 1;
+
+    ctx.strokeRect(
+      left,
+      y,
+      timeW,
+      rowH
+    );
+
+
+    ctx.fillStyle = "#765865";
+
+    ctx.font = "17px Arial";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+      displayTime(t),
+      left + timeW/2,
+      y + 44
+    );
+
+
+    // Celdas de cada día
+    for(let di=0;di<6;di++){
+
+      const x =
+        left +
+        timeW +
+        di*dayW;
+
+      ctx.fillStyle = "#ffffff";
+
+      ctx.fillRect(
+        x,
+        y,
+        dayW,
+        rowH
+      );
+
+      ctx.strokeStyle = "#ead9e0";
+
+      ctx.strokeRect(
+        x,
+        y,
+        dayW,
+        rowH
+      );
+
+    }
+
+  });
+
+
+  // =========================
+  // SÁBADO DESPUÉS DE LAS 4 PM
+  // =========================
+
+  for(
+    let r=saturdayTimes.length;
+    r<times.length;
+    r++
+  ){
+
+    const y =
+      top +
+      headerH +
+      r*rowH;
+
+    const x =
+      left +
+      timeW +
+      5*dayW;
+
+    ctx.fillStyle = "#faf7f9";
+
+    ctx.fillRect(
+      x+1,
+      y+1,
+      dayW-2,
+      rowH-2
+    );
+
+  }
+
+
+  // =========================
+  // CITAS
+  // =========================
+
+  const colorMap = {
+
+    30:"#f8d8e4",
+    60:"#cfe8ff",
+    90:"#fff0b8",
+    120:"#cfeccf",
+    150:"#e3d4f7",
+    180:"#ffd9bd",
+    210:"#c9eee9",
+    240:"#d8e2ff",
+    270:"#f5d2e8",
+    300:"#e7e3bd",
+    330:"#cde3d0",
+    360:"#d3d8f4",
+    390:"#f2d3c5",
+    420:"#c9e5ed",
+    450:"#ead1ef",
+    480:"#e4d8c7"
+
+  };
+
+
+  const jobs=[];
+
+
+  for(
+    let di=0;
+    di<6;
+    di++
+  ){
+
+    const timesDay =
+      timesFor(di);
+
+    timesDay.forEach(
+      (t,idx)=>{
+
+        const a =
+          data[key(di,t)];
+
+        if(
+          a &&
+          a.start===t
+        ){
+
+          jobs.push({
+            a,
+            di,
+            idx
+          });
+
+        }
+
+      }
+    );
+
+  }
+
+
+  for(const job of jobs){
+
+    const {
+      a,
+      di,
+      idx
+    } = job;
+
+
+    const visualSlots =
+      Math.ceil(
+        (Number(a.duration)||60)
+        / GRID_MINUTES
+      );
+
+
+    const x =
+      left +
+      timeW +
+      di*dayW;
+
+
+    const y =
+      top +
+      headerH +
+      idx*rowH;
+
+
+    const height =
+      Math.max(
+        rowH,
+        visualSlots*rowH
+      ) - 8;
+
+
+    // Fondo de la cita
+    ctx.fillStyle =
+      colorMap[a.duration]
+      || "#ffd6e3";
+
+
+    roundRect(
+      ctx,
+      x+5,
+      y+5,
+      dayW-10,
+      height,
+      12,
+      true
+    );
+
+
+    // Animal
+    const animal =
+      petImages[a.petType || "dog"]
+      || petImages.dog;
+
+
+    ctx.drawImage(
+      animal,
+      x+10,
+      y+10,
+      38,
+      38
+    );
+
+
+    // Nombre
+    ctx.fillStyle =
+      "#542b3a";
+
+    ctx.textAlign =
+      "left";
+
+    ctx.font =
+      "bold 20px Arial";
+
+
+    let name =
+      String(a.name || "");
+
+
+    // Ajustar nombres largos
+    while(
+      ctx.measureText(name).width >
+      dayW-60 &&
+      name.length>5
+    ){
+
+      name =
+        name.slice(0,-1);
+
+    }
+
+
+    if(
+      name !== String(a.name || "")
+    ){
+
+      name += "...";
+
+    }
+
+
+    ctx.fillText(
+      name,
+      x+53,
+      y+35
+    );
+
+
+    // Duración
+    ctx.font =
+      "16px Arial";
+
+    ctx.fillText(
+      formatDuration(a.duration),
+      x+13,
+      y+68
+    );
+
+
+    // Hora de término
+    ctx.font =
+      "bold 14px Arial";
+
+    ctx.fillText(
+      "Termina " +
+      displayTime(
+        addMinutes(
+          a.start,
+          a.duration
+        )
+      ),
+      x+13,
+      y+91
+    );
+
+  }
+
+
+  // =========================
+  // LEYENDA
+  // =========================
+
+  const legendY =
+    Math.min(
+      h-115,
+      top +
+      headerH +
+      times.length*rowH +
+      20
+    );
+
+
+  ctx.textAlign =
+    "left";
+
+  ctx.fillStyle =
+    "#765865";
+
+  ctx.font =
+    "bold 15px Arial";
+
+
+  ctx.fillText(
+    "COLORES SEGÚN DURACIÓN:",
+    left,
+    legendY
+  );
+
+
+  ctx.font =
+    "14px Arial";
+
+
+  ctx.fillText(
+    "1 h · 1 h 30 · 2 h · 2 h 30 · 3 h · 4 h · 8 h",
+    left,
+    legendY+27
+  );
+
+
+  // =========================
+  // PIE
+  // =========================
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillStyle =
+    "#e96891";
+
+  ctx.font =
+    "italic bold 25px Arial";
+
+
+  ctx.fillText(
+    "Agenda tu cita 🐾",
+    w/2,
+    h-45
+  );
+
 }
-
 function roundRect(ctx,x,y,w,h,r,fill){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();else ctx.stroke()}
 buildPetPicker();
 setPetType('dog');
