@@ -63,7 +63,11 @@
 
 <div id="modalBack" class="modal-back"><div class="modal">
 <h2 id="modalTitle">Agregar cita</h2><div id="modalInfo" class="info"></div>
-<label>Nombre de la mascota</label><input id="petName" maxlength="30" placeholder="Ej. Cuca">
+<label>Nombre de la mascota 1</label>
+<input id="petName" maxlength="30" placeholder="Ej. Cuca">
+
+<label>Segunda mascota <span style="font-weight:normal">(opcional)</span></label>
+<input id="petName2" maxlength="30" placeholder="Ej. Max">
 <label>¿Qué mascota es?</label>
 <div class="info" style="margin-top:-3px">Selecciona el animal para que aparezca su ilustración en la agenda y en la imagen descargada.</div>
 <input type="hidden" id="petType" value="dog">
@@ -151,132 +155,130 @@ function setPetType(type){
 function openModal(di,t){currentKey=key(di,t);let ap=data[currentKey];document.getElementById("modalTitle").textContent=ap?"Editar cita":"Agregar cita";document.getElementById("modalInfo").textContent=`${days[di]} · ${displayTime(t)}`;document.getElementById("petName").value=ap?ap.name:"";setPetType(ap?(ap.petType||"dog"):"dog");document.getElementById("duration").value=ap?ap.duration:"60";document.getElementById("deleteBtn").style.display=ap?"inline-block":"none";document.getElementById("modalBack").style.display="flex"}
 function closeModal(){document.getElementById("modalBack").style.display="none";currentKey=null}
 function saveAppointment(){
-  const name=document.getElementById("petName").value.trim();const petType=document.getElementById("petType").value;const duration=Number(document.getElementById("duration").value);if(!name)return alert("Escribe el nombre de la mascota.");
-  const [wk,diS,start]=currentKey.split("|"),di=Number(diS),times=timesFor(di),idx=times.indexOf(start);
-  if(idx<0)return alert("Ese horario no está disponible.");
-  const startMin=Number(start.slice(0,2))*60+Number(start.slice(3));
-  const visualDuration=Math.ceil(duration/GRID_MINUTES)*GRID_MINUTES;
-  const endMin=startMin+duration;
-  const visualEndMin=startMin+visualDuration;
-  const dayEnd=di===5?16*60:18*60+30;
-  if(startMin>dayEnd || visualEndMin>dayEnd)return alert("Ese horario no está disponible: el servicio ocuparía tiempo fuera del horario de atención.");
+
+  const name=document.getElementById("petName").value.trim();
+  const name2=document.getElementById("petName2").value.trim();
+  const petType=document.getElementById("petType").value;
+  const duration=Number(document.getElementById("duration").value);
+
+  if(!name){
+    return alert("Escribe el nombre de la mascota.");
+  }
+
+  const [wk,diS,start]=currentKey.split("|");
+  const di=Number(diS);
+  const times=timesFor(di);
+  const idx=times.indexOf(start);
+
+  if(idx<0){
+    return alert("Ese horario no está disponible.");
+  }
+
+  const startMin=
+    Number(start.slice(0,2))*60+
+    Number(start.slice(3));
+
+  const visualDuration=
+    Math.ceil(duration/GRID_MINUTES)*GRID_MINUTES;
+
+  const visualEndMin=
+    startMin+visualDuration;
+
+  const dayEnd=
+    di===5
+      ? 16*60
+      : 18*60+30;
+
+  if(
+    startMin>dayEnd ||
+    visualEndMin>dayEnd
+  ){
+    return alert(
+      "Ese horario no está disponible: el servicio ocuparía tiempo fuera del horario de atención."
+    );
+  }
+
+  // Revisar otros horarios ocupados
   for(const k of Object.keys(data)){
-    if(!k.startsWith(wk+"|"+di+"|"))continue;
-    const existing=data[k]; if(!existing || existing.start===start)continue;
-    const eStart=Number(existing.start.slice(0,2))*60+Number(existing.start.slice(3));
-    const eVisualDuration=Math.ceil(Number(existing.duration)/GRID_MINUTES)*GRID_MINUTES;
-    const eEnd=eStart+Number(existing.duration);
-    const eVisualEnd=eStart+eVisualDuration;
-    if(startMin<eVisualEnd && visualEndMin>eStart)return alert("Ese horario está ocupado por otra cita.");
+
+    if(!k.startsWith(wk+"|"+di+"|")) continue;
+
+    const existing=data[k];
+
+    if(!existing || existing.start===start) continue;
+
+    const eStart=
+      Number(existing.start.slice(0,2))*60+
+      Number(existing.start.slice(3));
+
+    const eVisualDuration=
+      Math.ceil(
+        Number(existing.duration)/GRID_MINUTES
+      )*GRID_MINUTES;
+
+    const eVisualEnd=
+      eStart+eVisualDuration;
+
+    if(
+      startMin<eVisualEnd &&
+      visualEndMin>eStart
+    ){
+      return alert(
+        "Ese horario está ocupado por otra cita."
+      );
+    }
   }
-  Object.keys(data).forEach(k=>{if(k.startsWith(wk+"|"+di+"|")&&data[k]?.start===start)delete data[k]});
-  data[key(di,start)]={name,petType:petType||"dog",duration,start};
-  persist();closeModal();render();
-}
-function deleteAppointment(){if(!currentKey)return;const [wk,diS,start]=currentKey.split("|"),di=Number(diS);Object.keys(data).forEach(k=>{if(k.startsWith(wk+"|"+di+"|")&&data[k]?.start===start)delete data[k]});persist();closeModal();render()}
-function persist(){localStorage.setItem("firulaisAgenda",JSON.stringify(data))}
-function clearWeek(){if(!confirm("¿Borrar todas las citas de esta semana?"))return;const wk=weekKey();Object.keys(data).forEach(k=>{if(k.startsWith(wk+"|"))delete data[k]});persist();render()}
-function changeWeek(n){weekOffset+=n;render()}
 
-function getAppointments(){
- let arr=[];for(let di=0;di<6;di++){timesFor(di).forEach(t=>{let a=data[key(di,t)];if(a&&a.start===t)arr.push({di,start:t,...a,end:addMinutes(t,a.duration)})})}return arr;
-}
-function renderMini(){
- const box=document.getElementById("storyMini");box.innerHTML=`<img src="${LOGO}"><h3>DISPONIBILIDAD DE LA SEMANA</h3><div style="font-size:7px;text-align:center">${fmt(dateFor(0))} – ${fmt(dateFor(5))}</div>`;
- getAppointments().forEach(a=>{let d=document.createElement("div");d.className="story-day";d.innerHTML=`<b>${days[a.di].toUpperCase()}</b><div class="story-row"><span>${displayTime(a.start)}</span><span class="busyx">${escapeHtml(a.name)}</span><span>${formatDuration(a.duration)}</span><span>→ ${displayTime(a.end)}</span></div>`;box.appendChild(d)})
-}
+  // Eliminar cualquier cita anterior
+  // del mismo horario
+  Object.keys(data).forEach(k=>{
 
-function loadImage(src){
-  return new Promise((resolve,reject)=>{
-    const im=new Image();
-    im.onload=()=>resolve(im);
-    im.onerror=reject;
-    im.src=src;
+    if(
+      k.startsWith(wk+"|"+di+"|") &&
+      data[k]?.start===start
+    ){
+      delete data[k];
+    }
+
   });
+
+  // Guardar hasta dos mascotas
+  data[key(di,start)]={
+
+    name:name,
+
+    name2:name2,
+
+    petType:petType||"dog",
+
+    duration:duration,
+
+    start:start
+
+  };
+
+  persist();
+  closeModal();
+  render();
 }
-async function downloadImage(type){
-  const jpg = type==="calendarJpg";
-
-  // Formato vertical para Historias
-  const w = 1080;
-  const h = 1920;
-
-  const c = document.createElement("canvas");
-  c.width = w;
-  c.height = h;
-
-  const ctx = c.getContext("2d");
-
-  try{
-    const [logo,dog,cat,guinea,rabbit] = await Promise.all([
-      loadImage(LOGO),
-      loadImage(PET_IMAGES.dog),
-      loadImage(PET_IMAGES.cat),
-      loadImage(PET_IMAGES.guinea),
-      loadImage(PET_IMAGES.rabbit)
-    ]);
-
-    drawFullCalendarStory(ctx,w,h,logo,{
-      dog,
-      cat,
-      guinea,
-      rabbit
-    });
-
-    const mime = jpg ? "image/jpeg" : "image/png";
-
-    const dataUrl = c.toDataURL(
-      mime,
-      jpg ? 0.96 : undefined
-    );
-
-    const a = document.createElement("a");
-
-    a.href = dataUrl;
-
-    a.download = jpg
-      ? "El_Spa_de_Firulais_Historia_1080x1920.jpg"
-      : "El_Spa_de_Firulais_Historia_1080x1920.png";
-
-    a.style.display = "none";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    setTimeout(()=>{
-      a.remove();
-    },1000);
-
-  }catch(err){
-
-    console.error(
-      "Error al descargar calendario:",
-      err
-    );
-
-    alert(
-      "No se pudo generar la imagen. Recarga la página y vuelve a intentarlo."
-    );
-  }
-}
-
 
 function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
-  // Fondo
-  ctx.fillStyle = "#fff7fa";
+  // =========================
+  // FONDO
+  // =========================
+
+  ctx.fillStyle="#fff7fa";
   ctx.fillRect(0,0,w,h);
 
-  // Tarjeta principal
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle="#ffffff";
 
   roundRect(
     ctx,
-    28,
     25,
-    w-56,
-    h-50,
+    22,
+    w-50,
+    h-44,
     30,
     true
   );
@@ -289,64 +291,75 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
   ctx.drawImage(
     logo,
     55,
-    55,
+    48,
     120,
     120
   );
 
-  ctx.fillStyle = "#542b3a";
-  ctx.textAlign = "left";
-
-  ctx.font = "bold 42px Arial";
+  ctx.fillStyle="#542b3a";
+  ctx.textAlign="left";
+  ctx.font="bold 42px Arial";
 
   ctx.fillText(
     "El Spa de Firulais",
     195,
-    92
+    88
   );
 
-  ctx.fillStyle = "#8a6674";
-
-  ctx.font = "24px Arial";
+  ctx.fillStyle="#8a6674";
+  ctx.font="bold 23px Arial";
 
   ctx.fillText(
     "DISPONIBILIDAD DE LA SEMANA",
     195,
-    130
+    125
   );
 
-  ctx.fillStyle = "#e96891";
-
-  ctx.font = "bold 20px Arial";
+  ctx.fillStyle="#e96891";
+  ctx.font="bold 20px Arial";
 
   ctx.fillText(
     `${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,
     195,
-    163
+    158
   );
 
 
   // =========================
-  // CALENDARIO
+  // CALENDARIO GRANDE
   // =========================
 
-  const left = 45;
-  const right = 45;
+  const left=35;
+  const right=35;
 
-  const top = 205;
+  // Empieza debajo del encabezado
+  const top=190;
 
-  const timeW = 125;
+  const bottom=1790;
 
-  const headerH = 62;
+  const timeW=120;
 
-  const dayW =
+  const headerH=65;
+
+  const dayW=
     (w-left-right-timeW)/6;
 
-  const rowH = 105;
+  const times=normalTimes;
+
+  // Calculamos automáticamente
+  // cuánto espacio tiene cada horario
+  const availableHeight=
+    bottom-(top+headerH);
+
+  const rowH=
+    availableHeight/times.length;
 
 
-  // Encabezado HORA
-  ctx.fillStyle = "#fff0f6";
+  // =========================
+  // ENCABEZADO HORA
+  // =========================
+
+  ctx.fillStyle="#fff0f6";
 
   roundRect(
     ctx,
@@ -358,28 +371,29 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
     true
   );
 
-  ctx.fillStyle = "#542b3a";
-
-  ctx.textAlign = "center";
-
-  ctx.font = "bold 18px Arial";
+  ctx.fillStyle="#542b3a";
+  ctx.textAlign="center";
+  ctx.font="bold 19px Arial";
 
   ctx.fillText(
     "HORA",
-    left + timeW/2,
-    top + 39
+    left+timeW/2,
+    top+42
   );
 
 
-  // Días
+  // =========================
+  // DÍAS
+  // =========================
+
   days.forEach((d,i)=>{
 
-    const x =
-      left +
-      timeW +
+    const x=
+      left+
+      timeW+
       i*dayW;
 
-    ctx.fillStyle = "#fff0f6";
+    ctx.fillStyle="#fff0f6";
 
     ctx.fillRect(
       x,
@@ -388,35 +402,33 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
       headerH
     );
 
-    ctx.fillStyle = "#542b3a";
-
-    ctx.font = "bold 16px Arial";
+    ctx.fillStyle="#542b3a";
+    ctx.font="bold 17px Arial";
 
     ctx.fillText(
       d.toUpperCase(),
-      x + dayW/2,
-      top + 39
+      x+dayW/2,
+      top+42
     );
 
   });
 
 
   // =========================
-  // FILAS DE HORARIOS
+  // FILAS
   // =========================
-
-  const times = normalTimes;
 
   times.forEach((t,r)=>{
 
-    const y =
-      top +
-      headerH +
+    const y=
+      top+
+      headerH+
       r*rowH;
 
 
-    // Hora
-    ctx.fillStyle = "#ffffff";
+    // Celda hora
+
+    ctx.fillStyle="#ffffff";
 
     ctx.fillRect(
       left,
@@ -425,9 +437,8 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
       rowH
     );
 
-    ctx.strokeStyle = "#ead9e0";
-
-    ctx.lineWidth = 1;
+    ctx.strokeStyle="#ead9e0";
+    ctx.lineWidth=1;
 
     ctx.strokeRect(
       left,
@@ -437,28 +448,28 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
     );
 
 
-    ctx.fillStyle = "#765865";
+    ctx.fillStyle="#765865";
+    ctx.textAlign="center";
 
-    ctx.font = "17px Arial";
-
-    ctx.textAlign = "center";
+    ctx.font="bold 17px Arial";
 
     ctx.fillText(
       displayTime(t),
-      left + timeW/2,
-      y + 44
+      left+timeW/2,
+      y+rowH/2+6
     );
 
 
-    // Celdas de cada día
+    // Celdas de días
+
     for(let di=0;di<6;di++){
 
-      const x =
-        left +
-        timeW +
+      const x=
+        left+
+        timeW+
         di*dayW;
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle="#ffffff";
 
       ctx.fillRect(
         x,
@@ -467,7 +478,7 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
         rowH
       );
 
-      ctx.strokeStyle = "#ead9e0";
+      ctx.strokeStyle="#ead9e0";
 
       ctx.strokeRect(
         x,
@@ -491,17 +502,17 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
     r++
   ){
 
-    const y =
-      top +
-      headerH +
+    const y=
+      top+
+      headerH+
       r*rowH;
 
-    const x =
-      left +
-      timeW +
+    const x=
+      left+
+      timeW+
       5*dayW;
 
-    ctx.fillStyle = "#faf7f9";
+    ctx.fillStyle="#faf7f9";
 
     ctx.fillRect(
       x+1,
@@ -514,10 +525,10 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
 
   // =========================
-  // CITAS
+  // COLORES
   // =========================
 
-  const colorMap = {
+  const colorMap={
 
     30:"#f8d8e4",
     60:"#cfe8ff",
@@ -539,22 +550,22 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
   };
 
 
+  // =========================
+  // CITAS
+  // =========================
+
   const jobs=[];
 
 
-  for(
-    let di=0;
-    di<6;
-    di++
-  ){
+  for(let di=0;di<6;di++){
 
-    const timesDay =
+    const timesDay=
       timesFor(di);
 
     timesDay.forEach(
       (t,idx)=>{
 
-        const a =
+        const a=
           data[key(di,t)];
 
         if(
@@ -582,39 +593,40 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
       a,
       di,
       idx
-    } = job;
+    }=job;
 
 
-    const visualSlots =
+    const visualSlots=
       Math.ceil(
         (Number(a.duration)||60)
-        / GRID_MINUTES
+        /GRID_MINUTES
       );
 
 
-    const x =
-      left +
-      timeW +
+    const x=
+      left+
+      timeW+
       di*dayW;
 
 
-    const y =
-      top +
-      headerH +
+    const y=
+      top+
+      headerH+
       idx*rowH;
 
 
-    const height =
+    const height=
       Math.max(
         rowH,
         visualSlots*rowH
-      ) - 8;
+      )-8;
 
 
-    // Fondo de la cita
-    ctx.fillStyle =
+    // Fondo
+
+    ctx.fillStyle=
       colorMap[a.duration]
-      || "#ffd6e3";
+      ||"#ffd6e3";
 
 
     roundRect(
@@ -629,89 +641,145 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
 
     // Animal
-    const animal =
-      petImages[a.petType || "dog"]
-      || petImages.dog;
+
+    const animal=
+      petImages[a.petType||"dog"]
+      ||petImages.dog;
 
 
     ctx.drawImage(
       animal,
       x+10,
       y+10,
-      38,
-      38
+      48,
+      48
     );
 
 
-    // Nombre
-    ctx.fillStyle =
-      "#542b3a";
+    // =========================
+// NOMBRES DE LAS MASCOTAS
+// =========================
 
-    ctx.textAlign =
-      "left";
+ctx.fillStyle="#542b3a";
+ctx.textAlign="left";
 
-    ctx.font =
-      "bold 20px Arial";
+ctx.font="bold 20px Arial";
 
+let name1=
+  String(a.name||"");
 
-    let name =
-      String(a.name || "");
-
-
-    // Ajustar nombres largos
-    while(
-      ctx.measureText(name).width >
-      dayW-60 &&
-      name.length>5
-    ){
-
-      name =
-        name.slice(0,-1);
-
-    }
+let name2=
+  String(a.name2||"");
 
 
-    if(
-      name !== String(a.name || "")
-    ){
+// Primera mascota
+while(
+  ctx.measureText(name1).width>
+  dayW-72 &&
+  name1.length>5
+){
+  name1=name1.slice(0,-1);
+}
 
-      name += "...";
+if(
+  name1!==String(a.name||"")
+){
+  name1+="...";
+}
 
-    }
+
+// Dibujar primera mascota
+ctx.fillText(
+  "🐶 "+name1,
+  x+10,
+  y+36
+);
 
 
-    ctx.fillText(
-      name,
-      x+53,
-      y+35
-    );
+// Segunda mascota
+if(name2){
 
+  ctx.font="bold 20px Arial";
+
+  while(
+    ctx.measureText(name2).width>
+    dayW-72 &&
+    name2.length>5
+  ){
+    name2=name2.slice(0,-1);
+  }
+
+  if(
+    name2!==String(a.name2||"")
+  ){
+    name2+="...";
+  }
+
+  ctx.fillText(
+    "🐶 "+name2,
+    x+10,
+    y+65
+  );
+
+}
+
+
+// =========================
+// DURACIÓN
+// =========================
+
+ctx.font="16px Arial";
+
+ctx.fillText(
+  formatDuration(a.duration),
+  x+10,
+  y+91
+);
+
+
+// =========================
+// HORA FINAL
+// =========================
+
+ctx.font="bold 14px Arial";
+
+ctx.fillText(
+  "Termina "+
+  displayTime(
+    addMinutes(
+      a.start,
+      a.duration
+    )
+  ),
+  x+10,
+  y+113
+);
 
     // Duración
-    ctx.font =
-      "16px Arial";
+
+    ctx.font="17px Arial";
 
     ctx.fillText(
       formatDuration(a.duration),
-      x+13,
-      y+68
+      x+14,
+      y+76
     );
 
 
-    // Hora de término
-    ctx.font =
-      "bold 14px Arial";
+    // Hora final
+
+    ctx.font="bold 15px Arial";
 
     ctx.fillText(
-      "Termina " +
+      "Termina "+
       displayTime(
         addMinutes(
           a.start,
           a.duration
         )
       ),
-      x+13,
-      y+91
+      x+14,
+      y+101
     );
 
   }
@@ -721,25 +789,14 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
   // LEYENDA
   // =========================
 
-  const legendY =
-    Math.min(
-      h-115,
-      top +
-      headerH +
-      times.length*rowH +
-      20
-    );
+  const legendY=1815;
 
 
-  ctx.textAlign =
-    "left";
+  ctx.textAlign="left";
 
-  ctx.fillStyle =
-    "#765865";
+  ctx.fillStyle="#765865";
 
-  ctx.font =
-    "bold 15px Arial";
-
+  ctx.font="bold 15px Arial";
 
   ctx.fillText(
     "COLORES SEGÚN DURACIÓN:",
@@ -748,14 +805,12 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
   );
 
 
-  ctx.font =
-    "14px Arial";
-
+  ctx.font="14px Arial";
 
   ctx.fillText(
     "1 h · 1 h 30 · 2 h · 2 h 30 · 3 h · 4 h · 8 h",
     left,
-    legendY+27
+    legendY+25
   );
 
 
@@ -763,20 +818,16 @@ function drawFullCalendarStory(ctx,w,h,logo,petImages){
   // PIE
   // =========================
 
-  ctx.textAlign =
-    "center";
+  ctx.textAlign="right";
 
-  ctx.fillStyle =
-    "#e96891";
+  ctx.fillStyle="#e96891";
 
-  ctx.font =
-    "italic bold 25px Arial";
-
+  ctx.font="italic bold 24px Arial";
 
   ctx.fillText(
     "Agenda tu cita 🐾",
-    w/2,
-    h-45
+    w-45,
+    1870
   );
 
 }
