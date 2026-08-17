@@ -196,10 +196,13 @@ function loadImage(src){
 }
 async function downloadImage(type){
   const jpg = type==="calendarJpg";
+  // Generar la misma agenda en alta resolución (2x) para que no se vea pequeña o borrosa.
+  const scale=2;
   const w=2200, h=720;
   const c=document.createElement("canvas");
-  c.width=w; c.height=h;
+  c.width=w*scale; c.height=h*scale;
   const ctx=c.getContext("2d");
+  ctx.scale(scale, scale);
   try{
     const [logo,dog,cat,guinea,rabbit]=await Promise.all([
       loadImage(LOGO), loadImage(PET_IMAGES.dog), loadImage(PET_IMAGES.cat),
