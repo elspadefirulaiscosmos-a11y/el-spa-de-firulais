@@ -3,214 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Spa de Firulais TV 🐾</title>
+
+<title>El Spa de Firulais</title>
 
 <style>
 *{
   box-sizing:border-box;
 }
 
-html,body{
-  margin:0;
+html,
+body{
   width:100%;
   height:100%;
+  margin:0;
+  padding:0;
   overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#fff5f8;
+  background:#000;
 }
 
-.tv{
+body{
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+#gallery{
+  position:fixed;
+  inset:0;
   width:100vw;
   height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  position:relative;
+  background:#000;
 }
 
-.pantalla{
+.slide{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
-  display:none;
-  flex-direction:column;
+
+  display:flex;
   align-items:center;
   justify-content:center;
-  padding:50px;
+
+  opacity:0;
+
+  transition:
+    opacity 1.8s cubic-bezier(.4,0,.2,1);
+
+  pointer-events:none;
 }
 
-.pantalla.activa{
-  display:flex;
+.slide.active{
+  opacity:1;
 }
 
-.logo{
-  width:180px;
-  height:180px;
-  object-fit:contain;
-  margin-bottom:20px;
-}
+.slide img{
+  width:100%;
+  height:100%;
 
-h1{
-  font-size:64px;
-  margin:10px 0;
-  color:#d94f7c;
-}
+  object-fit:cover;
 
-h2{
-  font-size:42px;
-  color:#704052;
-  margin:15px;
-}
+  display:block;
 
-p{
-  font-size:30px;
-  color:#765865;
-}
-
-.huella{
-  font-size:80px;
-  margin:20px;
-}
-
-.servicios{
-  display:flex;
-  gap:35px;
-  margin-top:30px;
-}
-
-.servicio{
-  background:white;
-  padding:30px 45px;
-  border-radius:25px;
-  box-shadow:0 8px 25px #e7ccd5;
-  font-size:30px;
-  color:#704052;
-}
-
-.qr{
-  margin-top:25px;
-  width:220px;
-  height:220px;
-  background:white;
-  border-radius:20px;
-  padding:10px;
-}
-
-.indicador{
-  position:absolute;
-  bottom:20px;
-  right:25px;
-  font-size:18px;
-  color:#b78c9b;
+  user-select:none;
+  -webkit-user-drag:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="tv">
+<div id="gallery">
 
-  <!-- PANTALLA 1 -->
-  <section class="pantalla activa">
-    <div class="huella">🐾</div>
-
-    <h1>El Spa de Firulais</h1>
-
-    <h2>¡Bienvenidos!</h2>
-
-    <p>
-      Cuidamos a tu mascota<br>
-      como parte de la familia ❤️
-    </p>
-  </section>
-
-
- <!-- PANTALLA 2 -->
-<section class="pantalla">
-
-  <h1>🐾 Nuestros trabajos</h1>
-
-  <img
-    src="https://oijgqsbltdkdkxasgica.supabase.co/storage/v1/object/public/firulais-tv/local.jpeg"
-    style="max-width:75%; max-height:65vh; object-fit:contain; border-radius:30px; box-shadow:0 10px 35px rgba(0,0,0,.15);"
-  >
-
-  <p>
-    ✂️ El Spa de Firulais
-  </p>
-
-</section>
-
-  <!-- PANTALLA 3 -->
-  <section class="pantalla">
-
-    <div class="huella">🛁</div>
-
-    <h1>Nuestros servicios</h1>
-
-    <div class="servicios">
-
-      <div class="servicio">
-        🛁<br>
-        Baño
-      </div>
-
-      <div class="servicio">
-        ✂️<br>
-        Corte
-      </div>
-
-      <div class="servicio">
-        🐶<br>
-        Estética
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- PANTALLA 4 -->
-  <section class="pantalla">
-
-    <div class="huella">❤️</div>
-
-    <h1>Tu mascota merece lo mejor</h1>
-
-    <p>
-      Agenda su próxima visita<br>
-      con El Spa de Firulais 🐾
-    </p>
-
-  </section>
-
-  <div class="indicador">
-    El Spa de Firulais 🐾
+  <div class="slide active">
+    <img
+      src="https://oijgqsbltdkdkxasgica.supabase.co/storage/v1/object/public/firulais-tv/local.jpeg"
+      alt=""
+    >
   </div>
 
 </div>
 
-
 <script>
 
-const pantallas=document.querySelectorAll(".pantalla");
+const images = [
+  "https://oijgqsbltdkdkxasgica.supabase.co/storage/v1/object/public/firulais-tv/local.jpeg"
+];
 
-let actual=0;
+const gallery = document.getElementById("gallery");
 
-function cambiarPantalla(){
+let current = 0;
 
-  pantallas[actual].classList.remove("activa");
+function createSlides(){
 
-  actual++;
+  gallery.innerHTML = "";
 
-  if(actual>=pantallas.length){
-    actual=0;
-  }
+  images.forEach((url, index) => {
 
-  pantallas[actual].classList.add("activa");
+    const slide = document.createElement("div");
+
+    slide.className = "slide";
+
+    if(index === 0){
+      slide.classList.add("active");
+    }
+
+    const img = document.createElement("img");
+
+    img.src = url;
+    img.alt = "";
+
+    slide.appendChild(img);
+
+    gallery.appendChild(slide);
+  });
 }
 
-setInterval(cambiarPantalla,8000);
+function next(){
+
+  const slides = document.querySelectorAll(".slide");
+
+  if(slides.length <= 1){
+    return;
+  }
+
+  slides[current].classList.remove("active");
+
+  current++;
+
+  if(current >= slides.length){
+    current = 0;
+  }
+
+  slides[current].classList.add("active");
+}
+
+createSlides();
+
+setInterval(next, 8000);
 
 </script>
 
