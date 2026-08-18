@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Spa de Firulais TV 🐾</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#fff5f8;
+}
+
+.tv{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+}
+
+.pantalla{
+  width:100%;
+  height:100%;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:50px;
+}
+
+.pantalla.activa{
+  display:flex;
+}
+
+.logo{
+  width:180px;
+  height:180px;
+  object-fit:contain;
+  margin-bottom:20px;
+}
+
+h1{
+  font-size:64px;
+  margin:10px 0;
+  color:#d94f7c;
+}
+
+h2{
+  font-size:42px;
+  color:#704052;
+  margin:15px;
+}
+
+p{
+  font-size:30px;
+  color:#765865;
+}
+
+.huella{
+  font-size:80px;
+  margin:20px;
+}
+
+.servicios{
+  display:flex;
+  gap:35px;
+  margin-top:30px;
+}
+
+.servicio{
+  background:white;
+  padding:30px 45px;
+  border-radius:25px;
+  box-shadow:0 8px 25px #e7ccd5;
+  font-size:30px;
+  color:#704052;
+}
+
+.qr{
+  margin-top:25px;
+  width:220px;
+  height:220px;
+  background:white;
+  border-radius:20px;
+  padding:10px;
+}
+
+.indicador{
+  position:absolute;
+  bottom:20px;
+  right:25px;
+  font-size:18px;
+  color:#b78c9b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="tv">
+
+  <!-- PANTALLA 1 -->
+  <section class="pantalla activa">
+    <div class="huella">🐾</div>
+
+    <h1>El Spa de Firulais</h1>
+
+    <h2>¡Bienvenidos!</h2>
+
+    <p>
+      Cuidamos a tu mascota<br>
+      como parte de la familia ❤️
+    </p>
+  </section>
+
+
+  <!-- PANTALLA 2 -->
+  <section class="pantalla">
+
+    <div class="huella">✂️🐶</div>
+
+    <h1>¡Consiente a tu Firulais!</h1>
+
+    <h2>Baño · Corte · Estética</h2>
+
+    <p>
+      Dale a tu mascota el cuidado<br>
+      que se merece.
+    </p>
+
+  </section>
+
+
+  <!-- PANTALLA 3 -->
+  <section class="pantalla">
+
+    <div class="huella">🛁</div>
+
+    <h1>Nuestros servicios</h1>
+
+    <div class="servicios">
+
+      <div class="servicio">
+        🛁<br>
+        Baño
+      </div>
+
+      <div class="servicio">
+        ✂️<br>
+        Corte
+      </div>
+
+      <div class="servicio">
+        🐶<br>
+        Estética
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PANTALLA 4 -->
+  <section class="pantalla">
+
+    <div class="huella">❤️</div>
+
+    <h1>Tu mascota merece lo mejor</h1>
+
+    <p>
+      Agenda su próxima visita<br>
+      con El Spa de Firulais 🐾
+    </p>
+
+  </section>
+
+  <div class="indicador">
+    El Spa de Firulais 🐾
+  </div>
+
+</div>
+
+
+<script>
+
+const pantallas=document.querySelectorAll(".pantalla");
+
+let actual=0;
+
+function cambiarPantalla(){
+
+  pantallas[actual].classList.remove("activa");
+
+  actual++;
+
+  if(actual>=pantallas.length){
+    actual=0;
+  }
+
+  pantallas[actual].classList.add("activa");
+}
+
+setInterval(cambiarPantalla,8000);
+
+</script>
+
+</body>
+</html>
