@@ -271,12 +271,17 @@ async function saveAppointment(){  if(!currentKey)return;
     duration,
     start
   };
-  await supabaseClient
+  const { error } = await supabaseClient
   .from("citas")
   .upsert({
     appointment_key: currentKey,
     data: data[currentKey]
   });
+
+if(error){
+  console.error("Error guardando cita en Supabase:", error);
+  alert("La cita se guardó localmente, pero no pudo sincronizarse con Internet.");
+}
   persist();closeModal();render();
 }
 function deleteAppointment(){
