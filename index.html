@@ -25,7 +25,7 @@
 .pet-icon{display:inline-flex;vertical-align:-7px;width:30px;height:30px;margin-right:5px;align-items:center;justify-content:center}.pet-icon img{width:30px;height:30px;object-fit:contain;border-radius:7px}
 .appointment{position:absolute;z-index:4;left:3px;right:3px;top:3px;border-radius:11px;background:linear-gradient(135deg,#f7a6c1,#ffd0df);padding:8px;font-size:13px;font-weight:800;box-shadow:0 2px 5px #7b304420;overflow:hidden;pointer-events:auto}.appointment small{display:block;font-weight:600;margin-top:5px}.end{display:inline-block;margin-top:5px;padding:3px 6px;background:#fff8fb;border-radius:7px;font-size:10px;color:#9b3f60}
 .legend{display:flex;gap:18px;flex-wrap:wrap;padding:12px 3px;color:#765865;font-size:13px}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}.busy{background:var(--pink)}.free{background:#fff;border:1px solid #ddd}
-.modal-back{position:fixed;inset:0;background:#3e263a66;display:none;align-items:center;justify-content:center;padding:15px;z-index:20}.modal{background:#fff;border-radius:20px;padding:22px;width:min(430px,100%);box-shadow:0 20px 60px #0003}.modal h2{margin:0 0 5px}.info{font-size:13px;color:#8b6875}.modal label{display:block;margin:14px 0 6px;font-weight:700}.pet-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:7px 0 2px}.pet-choice{border:1px solid #e6cbd5;background:#fff8fb;border-radius:12px;padding:7px 4px;cursor:pointer;text-align:center;color:#684452;font-size:11px;font-weight:700}.pet-choice img{width:62px;height:62px;object-fit:contain;display:block;margin:0 auto 3px;border-radius:12px}.pet-choice.active{border:2px solid #e96891;background:#fff0f6;box-shadow:0 3px 8px #e9689122}.pet-choice:hover{background:#fff0f6}@media(max-width:420px){.pet-picker{grid-template-columns:repeat(2,1fr)}}.modal input,.modal select{width:100%;padding:12px;border:1px solid #e4cbd5;border-radius:10px;font-size:16px;background:#fffafd}.modal select{cursor:pointer}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.danger{background:#fff0f2;color:#c94c70}
+.modal-back{position:fixed;inset:0;background:#3e263a66;display:none;align-items:center;justify-content:center;padding:15px;z-index:20}.modal{background:#fff;border-radius:20px;padding:22px;width:min(430px,100%);box-shadow:0 20px 60px #0003}.modal h2{margin:0 0 5px}.info{font-size:13px;color:#8b6875}.modal label{display:block;margin:14px 0 6px;font-weight:700}.pet-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:7px 0 2px}.pet-choice{border:1px solid #e6cbd5;background:#fff8fb;border-radius:12px;padding:7px 4px;cursor:pointer;text-align:center;color:#684452;font-size:11px;font-weight:700}.pet-choice img{width:62px;height:62px;object-fit:contain;display:block;margin:0 auto 3px;border-radius:12px}.pet-choice.active{border:2px solid #e96891;background:#fff0f6;box-shadow:0 3px 8px #e9689122}.pet-choice:hover{background:#fff0f6}@media(max-width:420px){.pet-picker{grid-template-columns:repeat(2,1fr)}}.modal input,.modal select{width:100%;padding:12px;border:1px solid #e4cbd5;border-radius:10px;font-size:16px;background:#fffafd}.modal select{cursor:pointer}.second-pet-toggle{margin-top:10px;background:#fff0f6;border:1px dashed #e96891;color:#b43d61;width:100%}.second-pet{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #f0d9e2}.second-pet.visible{display:block}.pet-label{font-size:12px;color:#8b6875;font-weight:700;margin:4px 0}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.danger{background:#fff0f2;color:#c94c70}
 .preview{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.preview h2{margin:0 0 8px}.preview-box{display:flex;gap:14px;align-items:center}.story-mini{width:220px;aspect-ratio:9/16;border-radius:16px;border:1px solid #efd7df;background:linear-gradient(#fff0f6,#fff);overflow:hidden;padding:12px;box-shadow:0 8px 20px #6d415012}.story-mini img{width:70px;height:70px;object-fit:contain;display:block;margin:auto}.story-mini h3{text-align:center;font-size:12px;margin:5px}.story-day{margin:8px 0 0}.story-day b{font-size:10px}.story-row{display:flex;justify-content:space-between;gap:3px;font-size:7px;padding:3px 0;border-bottom:1px solid #f1dfe6}.story-row .busyx{color:#b43d61;font-weight:700}.preview-controls{display:flex;flex-direction:column;gap:8px}.preview-controls button{width:220px}
 @media(max-width:700px){.app{padding:12px}.top{align-items:flex-start;flex-direction:column}.brand h1{font-size:21px}.logo{width:60px;height:60px}.preview-box{flex-direction:column;align-items:flex-start}}
 </style>
@@ -63,15 +63,24 @@
 
 <div id="modalBack" class="modal-back"><div class="modal">
 <h2 id="modalTitle">Agregar cita</h2><div id="modalInfo" class="info"></div>
-<label>Nombre de la mascota 1</label>
-<input id="petName" maxlength="30" placeholder="Ej. Cuca">
 
-<label>Segunda mascota <span style="font-weight:normal">(opcional)</span></label>
-<input id="petName2" maxlength="30" placeholder="Ej. Max">
+<label>Nombre de la mascota</label>
+<input id="petName" maxlength="30" placeholder="Ej. Cuca">
 <label>¿Qué mascota es?</label>
 <div class="info" style="margin-top:-3px">Selecciona el animal para que aparezca su ilustración en la agenda y en la imagen descargada.</div>
 <input type="hidden" id="petType" value="dog">
 <div class="pet-picker" id="petPicker"></div>
+
+<button type="button" id="secondPetToggle" class="second-pet-toggle" onclick="toggleSecondPet()">＋ Agregar segunda mascota al mismo horario</button>
+
+<div id="secondPet" class="second-pet">
+  <div class="pet-label">Segunda mascota</div>
+  <input id="petName2" maxlength="30" placeholder="Ej. Max">
+  <label>¿Qué mascota es?</label>
+  <input type="hidden" id="petType2" value="dog">
+  <div class="pet-picker" id="petPicker2"></div>
+</div>
+
 <label>Duración del servicio</label>
 <select id="duration"></select>
 <div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancelar</button><button id="deleteBtn" class="danger" style="display:none" onclick="deleteAppointment()">Eliminar</button><button class="primary" onclick="saveAppointment()">Guardar</button></div>
@@ -113,727 +122,406 @@ function petImage(type){
   return PET_IMAGES[type] || PET_IMAGES.dog;
 }
 
+function normalizeAppointment(a){
+  if(!a) return null;
+  let pets=Array.isArray(a.pets)?a.pets.slice(0,2):[];
+  if(!pets.length && a.name){
+    pets=[{name:a.name,petType:a.petType||"dog"}];
+  }
+  pets=pets.filter(p=>p && String(p.name||"").trim()).map(p=>({
+    name:String(p.name||"").trim(),
+    petType:p.petType||"dog"
+  }));
+  return {...a,pets,name:pets[0]?.name||a.name||"",petType:pets[0]?.petType||a.petType||"dog"};
+}
+
+function appointmentNames(a){
+  const n=normalizeAppointment(a);
+  return n?n.pets.map(p=>p.name).join(" + "):"";
+}
+
+function appointmentAnimals(a){
+  const n=normalizeAppointment(a);
+  return n?n.pets.map(p=>animalIcon(p.petType)).join(""):"";
+}
+
 function render(){
- document.getElementById("weekLabel").textContent=`${fmt(dateFor(0))} – ${fmt(dateFor(5))}`;
- const cal=document.getElementById("calendar");cal.innerHTML="";
- let x=document.createElement("div");x.className="cell head";x.textContent="Hora";cal.appendChild(x);
- days.forEach((d,i)=>{let h=document.createElement("div");h.className="cell head";h.innerHTML=`${d.toUpperCase()}<small>${fmt(dateFor(i))}</small>`;cal.appendChild(h)});
- const rows=normalTimes.length;
- for(let r=0;r<rows;r++){
-   const t=normalTimes[r];
-   let tc=document.createElement("div");tc.className="cell time";tc.textContent=displayTime(t);cal.appendChild(tc);
-   for(let di=0;di<6;di++){
-     const times=timesFor(di);let slot=document.createElement("div");slot.className="cell slot";
-     if(!times[r]){slot.classList.add("disabled");cal.appendChild(slot);continue}
-     let k=key(di,t), ap=data[k];
-     if(ap && ap.start===t){
-       let el=document.createElement("div");el.className="appointment duration-"+ap.duration;
-       const end=addMinutes(ap.start,ap.duration);
-       const visualSlots=Math.ceil(ap.duration/GRID_MINUTES);
-       const height=Math.max(90,visualSlots*90)-4;
-       el.style.height=height+"px";
-       el.innerHTML=`${animalIcon(ap.petType)}<span>${escapeHtml(ap.name)}</span><small>${formatDuration(ap.duration)}</small><span class="end">Termina ${displayTime(end)}</span>`;
-       el.onclick=e=>{e.stopPropagation();openModal(di,t)};slot.appendChild(el);
-     }
-     if(!ap)slot.onclick=()=>openModal(di,t);
-     else if(ap.start===t)slot.onclick=()=>openModal(di,t);
-     cal.appendChild(slot);
-   }
- }
- renderMini();
+  document.getElementById("weekLabel").textContent=`${fmt(dateFor(0))} – ${fmt(dateFor(5))}`;
+  const cal=document.getElementById("calendar");cal.innerHTML="";
+  let x=document.createElement("div");x.className="cell head";x.textContent="Hora";cal.appendChild(x);
+  days.forEach((d,i)=>{let h=document.createElement("div");h.className="cell head";h.innerHTML=`${d.toUpperCase()}<small>${fmt(dateFor(i))}</small>`;cal.appendChild(h)});
+  const rows=normalTimes.length;
+  for(let r=0;r<rows;r++){
+    const t=normalTimes[r];
+    let tc=document.createElement("div");tc.className="cell time";tc.textContent=displayTime(t);cal.appendChild(tc);
+    for(let di=0;di<6;di++){
+      const times=timesFor(di);let slot=document.createElement("div");slot.className="cell slot";
+      if(!times[r]){slot.classList.add("disabled");cal.appendChild(slot);continue}
+      let k=key(di,t), ap=normalizeAppointment(data[k]);
+      if(ap && ap.start===t){
+        let el=document.createElement("div");el.className="appointment duration-"+ap.duration;
+        const end=addMinutes(ap.start,ap.duration);
+        const visualSlots=Math.ceil(ap.duration/GRID_MINUTES);
+        const height=Math.max(90,visualSlots*90)-4;
+        el.style.height=height+"px";
+        const petsHtml=ap.pets.map(p=>`${animalIcon(p.petType)}<span>${escapeHtml(p.name)}</span>`).join("<br>");
+        el.innerHTML=`${petsHtml}<small>${formatDuration(ap.duration)}</small><span class="end">Termina ${displayTime(end)}</span>`;
+        el.onclick=e=>{e.stopPropagation();openModal(di,t)};slot.appendChild(el);
+      }
+      if(!ap)slot.onclick=()=>openModal(di,t);
+      else if(ap.start===t)slot.onclick=()=>openModal(di,t);
+      cal.appendChild(slot);
+    }
+  }
+  renderMini();
 }
-function buildPetPicker(){
- const box=document.getElementById("petPicker"); if(!box) return;
- box.innerHTML=[
-  ["dog","Perrito"],["cat","Gatito"],["guinea","Cuyito"],["rabbit","Conejito"]
- ].map(([type,label])=>`<button type="button" class="pet-choice" data-pet="${type}" onclick="setPetType('${type}')"><img src="${petImage(type)}" alt="${label}"><span>${label}</span></button>`).join("");
+
+function buildPetPicker(id="petPicker", typeId="petType"){
+  const box=document.getElementById(id); if(!box) return;
+  box.innerHTML=[
+   ["dog","Perrito"],["cat","Gatito"],["guinea","Cuyito"],["rabbit","Conejito"]
+  ].map(([type,label])=>`<button type="button" class="pet-choice" data-pet="${type}" onclick="setPetType('${type}','${typeId}')"><img src="${petImage(type)}" alt="${label}"><span>${label}</span></button>`).join("");
 }
-function setPetType(type){
- document.getElementById("petType").value=type;
- document.querySelectorAll(".pet-choice").forEach(b=>b.classList.toggle("active",b.dataset.pet===type));
+function setPetType(type,typeId="petType"){
+  document.getElementById(typeId).value=type;
+  const pickerId=typeId==="petType2"?"petPicker2":"petPicker";
+  document.querySelectorAll(`#${pickerId} .pet-choice`).forEach(b=>b.classList.toggle("active",b.dataset.pet===type));
 }
-function openModal(di,t){currentKey=key(di,t);let ap=data[currentKey];document.getElementById("modalTitle").textContent=ap?"Editar cita":"Agregar cita";document.getElementById("modalInfo").textContent=`${days[di]} · ${displayTime(t)}`;document.getElementById("petName").value=ap?ap.name:"";setPetType(ap?(ap.petType||"dog"):"dog");document.getElementById("duration").value=ap?ap.duration:"60";document.getElementById("deleteBtn").style.display=ap?"inline-block":"none";document.getElementById("modalBack").style.display="flex"}
+function toggleSecondPet(show=true){
+  const box=document.getElementById("secondPet");
+  const btn=document.getElementById("secondPetToggle");
+  if(!box||!btn)return;
+  const visible=show===true ? !box.classList.contains("visible") : !!show;
+  box.classList.toggle("visible",visible);
+  btn.textContent=visible?"− Quitar segunda mascota":"＋ Agregar segunda mascota al mismo horario";
+  if(!visible){
+    document.getElementById("petName2").value="";
+    setPetType("dog","petType2");
+  }
+}
+function openModal(di,t){
+  currentKey=key(di,t);
+  let ap=normalizeAppointment(data[currentKey]);
+  document.getElementById("modalTitle").textContent=ap?"Editar cita":"Agregar cita";
+  document.getElementById("modalInfo").textContent=`${days[di]} · ${displayTime(t)}`;
+  const p1=ap?.pets?.[0],p2=ap?.pets?.[1];
+  document.getElementById("petName").value=p1?.name||"";
+  setPetType(p1?.petType||"dog","petType");
+  document.getElementById("petName2").value=p2?.name||"";
+  setPetType(p2?.petType||"dog","petType2");
+  toggleSecondPet(!!p2);
+  document.getElementById("duration").value=ap?ap.duration:"60";
+  document.getElementById("deleteBtn").style.display=ap?"inline-block":"none";
+  document.getElementById("modalBack").style.display="flex";
+}
 function closeModal(){document.getElementById("modalBack").style.display="none";currentKey=null}
 function saveAppointment(){
-
-  const name=document.getElementById("petName").value.trim();
+  if(!currentKey)return;
+  const name1=document.getElementById("petName").value.trim();
+  const petType1=document.getElementById("petType").value||"dog";
   const name2=document.getElementById("petName2").value.trim();
-  const petType=document.getElementById("petType").value;
+  const petType2=document.getElementById("petType2").value||"dog";
+  const secondVisible=document.getElementById("secondPet").classList.contains("visible");
   const duration=Number(document.getElementById("duration").value);
+  if(!name1)return alert("Escribe el nombre de la mascota.");
+  if(secondVisible && !name2)return alert("Escribe el nombre de la segunda mascota.");
+  const pets=[{name:name1,petType:petType1}];
+  if(secondVisible)pets.push({name:name2,petType:petType2});
 
-  if(!name){
-    return alert("Escribe el nombre de la mascota.");
-  }
+  const [wk,diS,start]=currentKey.split("|"),di=Number(diS),times=timesFor(di),idx=times.indexOf(start);
+  if(idx<0)return alert("Ese horario no está disponible.");
+  const startMin=Number(start.slice(0,2))*60+Number(start.slice(3));
+  const visualDuration=Math.ceil(duration/GRID_MINUTES)*GRID_MINUTES;
+  const visualEndMin=startMin+visualDuration;
+  const dayEnd=di===5?16*60:18*60+30;
+  if(startMin>dayEnd || visualEndMin>dayEnd)return alert("Ese horario no está disponible: el servicio ocuparía tiempo fuera del horario de atención.");
 
-  const [wk,diS,start]=currentKey.split("|");
-  const di=Number(diS);
-  const times=timesFor(di);
-  const idx=times.indexOf(start);
-
-  if(idx<0){
-    return alert("Ese horario no está disponible.");
-  }
-
-  const startMin=
-    Number(start.slice(0,2))*60+
-    Number(start.slice(3));
-
-  const visualDuration=
-    Math.ceil(duration/GRID_MINUTES)*GRID_MINUTES;
-
-  const visualEndMin=
-    startMin+visualDuration;
-
-  const dayEnd=
-    di===5
-      ? 16*60
-      : 18*60+30;
-
-  if(
-    startMin>dayEnd ||
-    visualEndMin>dayEnd
-  ){
-    return alert(
-      "Ese horario no está disponible: el servicio ocuparía tiempo fuera del horario de atención."
-    );
-  }
-
-  // Revisar otros horarios ocupados
   for(const k of Object.keys(data)){
-
-    if(!k.startsWith(wk+"|"+di+"|")) continue;
-
-    const existing=data[k];
-
-    if(!existing || existing.start===start) continue;
-
-    const eStart=
-      Number(existing.start.slice(0,2))*60+
-      Number(existing.start.slice(3));
-
-    const eVisualDuration=
-      Math.ceil(
-        Number(existing.duration)/GRID_MINUTES
-      )*GRID_MINUTES;
-
-    const eVisualEnd=
-      eStart+eVisualDuration;
-
-    if(
-      startMin<eVisualEnd &&
-      visualEndMin>eStart
-    ){
-      return alert(
-        "Ese horario está ocupado por otra cita."
-      );
-    }
+    if(k===currentKey || !k.startsWith(wk+"|"+di+"|"))continue;
+    const existing=normalizeAppointment(data[k]); if(!existing)continue;
+    const eStart=Number(existing.start.slice(0,2))*60+Number(existing.start.slice(3));
+    const eVisualDuration=Math.ceil(Number(existing.duration)/GRID_MINUTES)*GRID_MINUTES;
+    const eVisualEnd=eStart+eVisualDuration;
+    if(startMin<eVisualEnd && visualEndMin>eStart)return alert("Ese horario está ocupado por otra cita.");
   }
 
-  // Eliminar cualquier cita anterior
-  // del mismo horario
-  Object.keys(data).forEach(k=>{
-
-    if(
-      k.startsWith(wk+"|"+di+"|") &&
-      data[k]?.start===start
-    ){
-      delete data[k];
-    }
-
-  });
-
-  // Guardar hasta dos mascotas
-  data[key(di,start)]={
-
-    name:name,
-
-    name2:name2,
-
-    petType:petType||"dog",
-
-    duration:duration,
-
-    start:start
-
+  data[currentKey]={
+    name:pets[0].name,
+    petType:pets[0].petType,
+    pets,
+    duration,
+    start
   };
+  persist();closeModal();render();
+}
+function deleteAppointment(){
+  if(!currentKey)return;
+  delete data[currentKey];
+  persist();closeModal();render();
+}
+function persist(){localStorage.setItem("firulaisAgenda",JSON.stringify(data))}
+function clearWeek(){if(!confirm("¿Borrar todas las citas de esta semana?"))return;const wk=weekKey();Object.keys(data).forEach(k=>{if(k.startsWith(wk+"|"))delete data[k]});persist();render()}
+function changeWeek(n){weekOffset+=n;render()}
 
-  persist();
-  closeModal();
-  render();
+function getAppointments(){
+  let arr=[];
+  for(let di=0;di<6;di++){
+    timesFor(di).forEach(t=>{
+      let a=normalizeAppointment(data[key(di,t)]);
+      if(a&&a.start===t)arr.push({di,start:t,...a,end:addMinutes(t,a.duration)});
+    });
+  }
+  return arr;
+}
+function renderMini(){
+  const box=document.getElementById("storyMini");
+  if(!box)return;
+  box.innerHTML=`<img src="${LOGO}"><h3>DISPONIBILIDAD DE LA SEMANA</h3><div style="font-size:7px;text-align:center">${fmt(dateFor(0))} – ${fmt(dateFor(5))}</div>`;
+  getAppointments().forEach(a=>{
+    let d=document.createElement("div");d.className="story-day";
+    d.innerHTML=`<b>${days[a.di].toUpperCase()}</b><div class="story-row"><span>${displayTime(a.start)}</span><span class="busyx">${escapeHtml(appointmentNames(a))}</span><span>${formatDuration(a.duration)}</span><span>→ ${displayTime(a.end)}</span></div>`;
+    box.appendChild(d);
+  });
 }
 
-function drawFullCalendarStory(ctx,w,h,logo,petImages){
+function loadImage(src){
+  return new Promise((resolve,reject)=>{
+    const im=new Image();
+    im.onload=()=>resolve(im);
+    im.onerror=reject;
+    im.src=src;
+  });
+}
+async function downloadImage(type){
+  const jpg = type==="calendarJpg";
 
-  // =========================
-  // FONDO
-  // =========================
+  // Formato vertical para Historias
+  const w = 1080;
+  const h = 1920;
+
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+
+  const ctx = c.getContext("2d");
+
+  try{
+    const [logo,dog,cat,guinea,rabbit] = await Promise.all([
+      loadImage(LOGO),
+      loadImage(PET_IMAGES.dog),
+      loadImage(PET_IMAGES.cat),
+      loadImage(PET_IMAGES.guinea),
+      loadImage(PET_IMAGES.rabbit)
+    ]);
+
+    drawFullCalendarStory(ctx,w,h,logo,{
+      dog,
+      cat,
+      guinea,
+      rabbit
+    });
+
+    const mime = jpg ? "image/jpeg" : "image/png";
+
+    const dataUrl = c.toDataURL(
+      mime,
+      jpg ? 0.96 : undefined
+    );
+
+    const a = document.createElement("a");
+
+    a.href = dataUrl;
+
+    a.download = jpg
+      ? "El_Spa_de_Firulais_Historia_1080x1920.jpg"
+      : "El_Spa_de_Firulais_Historia_1080x1920.png";
+
+    a.style.display = "none";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    setTimeout(()=>{
+      a.remove();
+    },1000);
+
+  }catch(err){
+
+    console.error(
+      "Error al descargar calendario:",
+      err
+    );
+
+    alert(
+      "No se pudo generar la imagen. Recarga la página y vuelve a intentarlo."
+    );
+  }
+}
+
+
+function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
   ctx.fillStyle="#fff7fa";
   ctx.fillRect(0,0,w,h);
 
   ctx.fillStyle="#ffffff";
+  roundRect(ctx,28,25,w-56,h-50,30,true);
 
-  roundRect(
-    ctx,
-    25,
-    22,
-    w-50,
-    h-44,
-    30,
-    true
-  );
-
-
-  // =========================
-  // ENCABEZADO
-  // =========================
-
-  ctx.drawImage(
-    logo,
-    55,
-    48,
-    120,
-    120
-  );
+  // Encabezado compacto: reservamos únicamente el espacio necesario para el logo y título.
+  ctx.drawImage(logo,55,45,105,105);
 
   ctx.fillStyle="#542b3a";
   ctx.textAlign="left";
-  ctx.font="bold 42px Arial";
-
-  ctx.fillText(
-    "El Spa de Firulais",
-    195,
-    88
-  );
+  ctx.font="bold 40px Arial";
+  ctx.fillText("El Spa de Firulais",180,78);
 
   ctx.fillStyle="#8a6674";
-  ctx.font="bold 23px Arial";
-
-  ctx.fillText(
-    "DISPONIBILIDAD DE LA SEMANA",
-    195,
-    125
-  );
+  ctx.font="23px Arial";
+  ctx.fillText("DISPONIBILIDAD DE LA SEMANA",180,113);
 
   ctx.fillStyle="#e96891";
-  ctx.font="bold 20px Arial";
+  ctx.font="bold 19px Arial";
+  ctx.fillText(`${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,180,143);
 
-  ctx.fillText(
-    `${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,
-    195,
-    158
-  );
-
-
-  // =========================
-  // CALENDARIO GRANDE
-  // =========================
-
-  const left=35;
-  const right=35;
-
-  // Empieza debajo del encabezado
-  const top=190;
-
-  const bottom=1790;
-
-  const timeW=120;
-
-  const headerH=65;
-
-  const dayW=
-    (w-left-right-timeW)/6;
-
+  // Calendario ampliado para aprovechar prácticamente toda la historia 1080x1920.
+  const left=40, right=40;
+  const top=175;
+  const timeW=125;
+  const headerH=58;
+  const dayW=(w-left-right-timeW)/6;
+  const rowH=235;
   const times=normalTimes;
 
-  // Calculamos automáticamente
-  // cuánto espacio tiene cada horario
-  const availableHeight=
-    bottom-(top+headerH);
-
-  const rowH=
-    availableHeight/times.length;
-
-
-  // =========================
-  // ENCABEZADO HORA
-  // =========================
-
   ctx.fillStyle="#fff0f6";
-
-  roundRect(
-    ctx,
-    left,
-    top,
-    timeW,
-    headerH,
-    10,
-    true
-  );
-
+  roundRect(ctx,left,top,timeW,headerH,10,true);
   ctx.fillStyle="#542b3a";
   ctx.textAlign="center";
-  ctx.font="bold 19px Arial";
-
-  ctx.fillText(
-    "HORA",
-    left+timeW/2,
-    top+42
-  );
-
-
-  // =========================
-  // DÍAS
-  // =========================
+  ctx.font="bold 18px Arial";
+  ctx.fillText("HORA",left+timeW/2,top+37);
 
   days.forEach((d,i)=>{
-
-    const x=
-      left+
-      timeW+
-      i*dayW;
-
+    const x=left+timeW+i*dayW;
     ctx.fillStyle="#fff0f6";
-
-    ctx.fillRect(
-      x,
-      top,
-      dayW,
-      headerH
-    );
-
+    ctx.fillRect(x,top,dayW,headerH);
     ctx.fillStyle="#542b3a";
-    ctx.font="bold 17px Arial";
-
-    ctx.fillText(
-      d.toUpperCase(),
-      x+dayW/2,
-      top+42
-    );
-
+    ctx.font="bold 15px Arial";
+    ctx.fillText(d.toUpperCase(),x+dayW/2,top+37);
   });
-
-
-  // =========================
-  // FILAS
-  // =========================
 
   times.forEach((t,r)=>{
-
-    const y=
-      top+
-      headerH+
-      r*rowH;
-
-
-    // Celda hora
+    const y=top+headerH+r*rowH;
 
     ctx.fillStyle="#ffffff";
-
-    ctx.fillRect(
-      left,
-      y,
-      timeW,
-      rowH
-    );
-
+    ctx.fillRect(left,y,timeW,rowH);
     ctx.strokeStyle="#ead9e0";
     ctx.lineWidth=1;
-
-    ctx.strokeRect(
-      left,
-      y,
-      timeW,
-      rowH
-    );
-
+    ctx.strokeRect(left,y,timeW,rowH);
 
     ctx.fillStyle="#765865";
+    ctx.font="bold 18px Arial";
     ctx.textAlign="center";
-
-    ctx.font="bold 17px Arial";
-
-    ctx.fillText(
-      displayTime(t),
-      left+timeW/2,
-      y+rowH/2+6
-    );
-
-
-    // Celdas de días
+    ctx.fillText(displayTime(t),left+timeW/2,y+58);
 
     for(let di=0;di<6;di++){
-
-      const x=
-        left+
-        timeW+
-        di*dayW;
-
+      const x=left+timeW+di*dayW;
       ctx.fillStyle="#ffffff";
-
-      ctx.fillRect(
-        x,
-        y,
-        dayW,
-        rowH
-      );
-
+      ctx.fillRect(x,y,dayW,rowH);
       ctx.strokeStyle="#ead9e0";
-
-      ctx.strokeRect(
-        x,
-        y,
-        dayW,
-        rowH
-      );
-
+      ctx.strokeRect(x,y,dayW,rowH);
     }
-
   });
 
-
-  // =========================
-  // SÁBADO DESPUÉS DE LAS 4 PM
-  // =========================
-
-  for(
-    let r=saturdayTimes.length;
-    r<times.length;
-    r++
-  ){
-
-    const y=
-      top+
-      headerH+
-      r*rowH;
-
-    const x=
-      left+
-      timeW+
-      5*dayW;
-
+  // Sábado después de las 4 PM no está disponible.
+  for(let r=saturdayTimes.length;r<times.length;r++){
+    const y=top+headerH+r*rowH;
+    const x=left+timeW+5*dayW;
     ctx.fillStyle="#faf7f9";
-
-    ctx.fillRect(
-      x+1,
-      y+1,
-      dayW-2,
-      rowH-2
-    );
-
+    ctx.fillRect(x+1,y+1,dayW-2,rowH-2);
   }
-
-
-  // =========================
-  // COLORES
-  // =========================
 
   const colorMap={
-
-    30:"#f8d8e4",
-    60:"#cfe8ff",
-    90:"#fff0b8",
-    120:"#cfeccf",
-    150:"#e3d4f7",
-    180:"#ffd9bd",
-    210:"#c9eee9",
-    240:"#d8e2ff",
-    270:"#f5d2e8",
-    300:"#e7e3bd",
-    330:"#cde3d0",
-    360:"#d3d8f4",
-    390:"#f2d3c5",
-    420:"#c9e5ed",
-    450:"#ead1ef",
-    480:"#e4d8c7"
-
+    30:"#f8d8e4",60:"#cfe8ff",90:"#fff0b8",120:"#cfeccf",
+    150:"#e3d4f7",180:"#ffd9bd",210:"#c9eee9",240:"#d8e2ff",
+    270:"#f5d2e8",300:"#e7e3bd",330:"#cde3d0",360:"#d3d8f4",
+    390:"#f2d3c5",420:"#c9e5ed",450:"#ead1ef",480:"#e4d8c7"
   };
 
-
-  // =========================
-  // CITAS
-  // =========================
-
   const jobs=[];
-
-
   for(let di=0;di<6;di++){
-
-    const timesDay=
-      timesFor(di);
-
-    timesDay.forEach(
-      (t,idx)=>{
-
-        const a=
-          data[key(di,t)];
-
-        if(
-          a &&
-          a.start===t
-        ){
-
-          jobs.push({
-            a,
-            di,
-            idx
-          });
-
-        }
-
-      }
-    );
-
+    timesFor(di).forEach((t,idx)=>{
+      const a=normalizeAppointment(data[key(di,t)]);
+      if(a&&a.start===t)jobs.push({a,di,idx});
+    });
   }
 
+  for(const {a,di,idx} of jobs){
+    const visualSlots=Math.ceil((Number(a.duration)||60)/GRID_MINUTES);
+    const x=left+timeW+di*dayW;
+    const y=top+headerH+idx*rowH;
+    const height=Math.max(rowH,visualSlots*rowH)-8;
 
-  for(const job of jobs){
+    ctx.fillStyle=colorMap[a.duration]||"#ffd6e3";
+    roundRect(ctx,x+5,y+5,dayW-10,height,14,true);
 
-    const {
-      a,
-      di,
-      idx
-    }=job;
+    const pets=a.pets||[{name:a.name,petType:a.petType||"dog"}];
+    const usableW=dayW-20;
 
+    if(pets.length===1){
+      const animal=petImages[pets[0].petType]||petImages.dog;
+      ctx.drawImage(animal,x+12,y+16,58,58);
+      ctx.fillStyle="#542b3a";
+      ctx.textAlign="left";
+      ctx.font="bold 22px Arial";
+      let name=String(pets[0].name||"");
+      while(ctx.measureText(name).width>usableW-72&&name.length>5)name=name.slice(0,-1);
+      if(name!==pets[0].name)name+="...";
+      ctx.fillText(name,x+76,y+53);
+    }else{
+      pets.slice(0,2).forEach((p,pi)=>{
+        const py=y+14+pi*78;
+        const animal=petImages[p.petType]||petImages.dog;
+        ctx.drawImage(animal,x+12,py,52,52);
+        ctx.fillStyle="#542b3a";
+        ctx.textAlign="left";
+        ctx.font="bold 18px Arial";
+        let name=String(p.name||"");
+        while(ctx.measureText(name).width>usableW-66&&name.length>5)name=name.slice(0,-1);
+        if(name!==p.name)name+="...";
+        ctx.fillText(name,x+72,py+33);
+      });
+    }
 
-    const visualSlots=
-      Math.ceil(
-        (Number(a.duration)||60)
-        /GRID_MINUTES
-      );
-
-
-    const x=
-      left+
-      timeW+
-      di*dayW;
-
-
-    const y=
-      top+
-      headerH+
-      idx*rowH;
-
-
-    const height=
-      Math.max(
-        rowH,
-        visualSlots*rowH
-      )-8;
-
-
-    // Fondo
-
-    ctx.fillStyle=
-      colorMap[a.duration]
-      ||"#ffd6e3";
-
-
-    roundRect(
-      ctx,
-      x+5,
-      y+5,
-      dayW-10,
-      height,
-      12,
-      true
-    );
-
-
-    // Animal
-
-    const animal=
-      petImages[a.petType||"dog"]
-      ||petImages.dog;
-
-
-    ctx.drawImage(
-      animal,
-      x+10,
-      y+10,
-      48,
-      48
-    );
-
-
-    // =========================
-// NOMBRES DE LAS MASCOTAS
-// =========================
-
-ctx.fillStyle="#542b3a";
-ctx.textAlign="left";
-
-ctx.font="bold 20px Arial";
-
-let name1=
-  String(a.name||"");
-
-let name2=
-  String(a.name2||"");
-
-
-// Primera mascota
-while(
-  ctx.measureText(name1).width>
-  dayW-72 &&
-  name1.length>5
-){
-  name1=name1.slice(0,-1);
-}
-
-if(
-  name1!==String(a.name||"")
-){
-  name1+="...";
-}
-
-
-// Dibujar primera mascota
-ctx.fillText(
-  "🐶 "+name1,
-  x+10,
-  y+36
-);
-
-
-// Segunda mascota
-if(name2){
-
-  ctx.font="bold 20px Arial";
-
-  while(
-    ctx.measureText(name2).width>
-    dayW-72 &&
-    name2.length>5
-  ){
-    name2=name2.slice(0,-1);
-  }
-
-  if(
-    name2!==String(a.name2||"")
-  ){
-    name2+="...";
-  }
-
-  ctx.fillText(
-    "🐶 "+name2,
-    x+10,
-    y+65
-  );
-
-}
-
-
-// =========================
-// DURACIÓN
-// =========================
-
-ctx.font="16px Arial";
-
-ctx.fillText(
-  formatDuration(a.duration),
-  x+10,
-  y+91
-);
-
-
-// =========================
-// HORA FINAL
-// =========================
-
-ctx.font="bold 14px Arial";
-
-ctx.fillText(
-  "Termina "+
-  displayTime(
-    addMinutes(
-      a.start,
-      a.duration
-    )
-  ),
-  x+10,
-  y+113
-);
-
-    // Duración
-
-    ctx.font="17px Arial";
-
-    ctx.fillText(
-      formatDuration(a.duration),
-      x+14,
-      y+76
-    );
-
-
-    // Hora final
+    ctx.fillStyle="#542b3a";
+    ctx.textAlign="left";
+    ctx.font="16px Arial";
+    const detailY=y+(pets.length===2?180:105);
+    ctx.fillText(formatDuration(a.duration),x+13,detailY);
 
     ctx.font="bold 15px Arial";
-
-    ctx.fillText(
-      "Termina "+
-      displayTime(
-        addMinutes(
-          a.start,
-          a.duration
-        )
-      ),
-      x+14,
-      y+101
-    );
-
+    ctx.fillText("Termina "+displayTime(addMinutes(a.start,a.duration)),x+13,detailY+27);
   }
 
-
-  // =========================
-  // LEYENDA
-  // =========================
-
-  const legendY=1815;
-
+  const calendarBottom=top+headerH+times.length*rowH;
+  const legendY=Math.min(h-115,calendarBottom+22);
 
   ctx.textAlign="left";
-
   ctx.fillStyle="#765865";
-
   ctx.font="bold 15px Arial";
-
-  ctx.fillText(
-    "COLORES SEGÚN DURACIÓN:",
-    left,
-    legendY
-  );
-
-
+  ctx.fillText("COLORES SEGÚN DURACIÓN:",left,legendY);
   ctx.font="14px Arial";
+  ctx.fillText("1 h · 1 h 30 · 2 h · 2 h 30 · 3 h · 4 h · 8 h",left,legendY+25);
 
-  ctx.fillText(
-    "1 h · 1 h 30 · 2 h · 2 h 30 · 3 h · 4 h · 8 h",
-    left,
-    legendY+25
-  );
-
-
-  // =========================
-  // PIE
-  // =========================
-
-  ctx.textAlign="right";
-
+  ctx.textAlign="center";
   ctx.fillStyle="#e96891";
-
   ctx.font="italic bold 24px Arial";
-
-  ctx.fillText(
-    "Agenda tu cita 🐾",
-    w-45,
-    1870
-  );
-
+  ctx.fillText("Agenda tu cita 🐾",w/2,h-45);
 }
 function roundRect(ctx,x,y,w,h,r,fill){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();else ctx.stroke()}
-buildPetPicker();
-setPetType('dog');
+buildPetPicker('petPicker','petType');
+buildPetPicker('petPicker2','petType2');
+setPetType('dog','petType');
+setPetType('dog','petType2');
 render();
 </script>
 </body>
