@@ -284,10 +284,24 @@ if(error){
 }
   persist();closeModal();render();
 }
-function deleteAppointment(){
+async function deleteAppointment(){
   if(!currentKey)return;
+
+  const { error } = await supabaseClient
+    .from("citas")
+    .delete()
+    .eq("appointment_key", currentKey);
+
+  if(error){
+    console.error("Error eliminando cita de Supabase:", error);
+    alert("No se pudo eliminar la cita de Internet.");
+    return;
+  }
+
   delete data[currentKey];
-  persist();closeModal();render();
+  persist();
+  closeModal();
+  render();
 }
 function persist(){localStorage.setItem("firulaisAgenda",JSON.stringify(data))}
 async function loadFromSupabase(){
