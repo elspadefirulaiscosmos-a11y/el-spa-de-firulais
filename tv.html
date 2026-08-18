@@ -7,7 +7,8 @@
 <title>El Spa de Firulais</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
 
 *{
   box-sizing:border-box;
@@ -28,9 +29,9 @@ body{
   color:white;
 }
 
-/* =========================
-   ESCENARIO PRINCIPAL
-========================= */
+/* =========================================
+   ESCENARIO
+========================================= */
 
 #stage{
   position:fixed;
@@ -39,9 +40,9 @@ body{
   background:#080808;
 }
 
-/* =========================
-   FOTOGRAFÍAS
-========================= */
+/* =========================================
+   SLIDE
+========================================= */
 
 .slide{
   position:absolute;
@@ -64,30 +65,66 @@ body{
   opacity:1;
 }
 
-.photo{
-  position:absolute;
-  inset:-4%;
+/* =========================================
+   FONDO DESENFOCADO
+   Sirve especialmente para fotos verticales
+========================================= */
 
-  width:108%;
-  height:108%;
+.background{
+  position:absolute;
+  inset:-8%;
+
+  width:116%;
+  height:116%;
 
   object-fit:cover;
 
-  filter:saturate(1.03) contrast(1.02);
+  filter:
+    blur(35px)
+    brightness(.48)
+    saturate(1.05);
 
-  transform:scale(1.04);
+  transform:scale(1.12);
+
+  opacity:.85;
+}
+
+/* =========================================
+   FOTOGRAFÍA PRINCIPAL
+========================================= */
+
+.photo{
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  width:100%;
+  height:100%;
+
+  transform:
+    translate(-50%,-50%)
+    scale(1.015);
+
+  object-fit:contain;
+
+  filter:
+    saturate(1.03)
+    contrast(1.02);
 
   transition:
-    transform 12s cubic-bezier(.16,1,.3,1);
+    transform 11s cubic-bezier(.16,1,.3,1);
 }
 
 .slide.active .photo{
-  transform:scale(1.11);
+  transform:
+    translate(-50%,-50%)
+    scale(1.055);
 }
 
-/* =========================
-   CAPA CINEMATOGRÁFICA
-========================= */
+/* =========================================
+   CAPA OSCURA CINEMATOGRÁFICA
+========================================= */
 
 .vignette{
   position:absolute;
@@ -96,51 +133,97 @@ body{
   background:
     radial-gradient(
       ellipse at center,
-      transparent 35%,
-      rgba(0,0,0,.18) 65%,
-      rgba(0,0,0,.65) 100%
+      transparent 40%,
+      rgba(0,0,0,.12) 70%,
+      rgba(0,0,0,.55) 100%
     );
 
   pointer-events:none;
 }
 
+/* =========================================
+   DEGRADADO INFERIOR
+========================================= */
+
 .bottomFade{
   position:absolute;
+
   left:0;
   right:0;
   bottom:0;
 
-  height:38%;
+  height:45%;
 
   background:
     linear-gradient(
       to top,
-      rgba(0,0,0,.72),
-      rgba(0,0,0,.18),
+      rgba(0,0,0,.78),
+      rgba(0,0,0,.25),
       transparent
     );
 
   pointer-events:none;
 }
 
-/* =========================
-   MARCA
-========================= */
+/* =========================================
+   DESTELLO DE LUZ
+========================================= */
+
+.light{
+  position:absolute;
+
+  width:50vw;
+  height:50vw;
+
+  top:-30vw;
+  right:-15vw;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.11),
+      transparent 68%
+    );
+
+  filter:blur(15px);
+
+  opacity:0;
+
+  transform:translate(10vw,10vw);
+
+  transition:
+    opacity 2.5s ease,
+    transform 11s cubic-bezier(.16,1,.3,1);
+}
+
+.slide.active .light{
+  opacity:1;
+  transform:translate(-8vw,22vw);
+}
+
+/* =========================================
+   CONTENIDO DE MARCA
+========================================= */
 
 .brand{
   position:absolute;
 
   left:6vw;
-  bottom:7vh;
+  bottom:8vh;
 
   z-index:20;
 
+  max-width:75vw;
+
   opacity:0;
-  transform:translateY(25px);
+
+  transform:translateY(35px);
 
   transition:
-    opacity 1.4s ease .6s,
-    transform 1.4s cubic-bezier(.16,1,.3,1) .6s;
+    opacity 1.4s ease .7s,
+    transform 1.4s cubic-bezier(.16,1,.3,1) .7s;
 }
 
 .slide.active .brand{
@@ -148,17 +231,29 @@ body{
   transform:translateY(0);
 }
 
+/* =========================================
+   NOMBRE
+========================================= */
+
 .brandName{
   font-family:'Playfair Display',serif;
 
-  font-size:clamp(38px,5vw,78px);
+  font-size:
+    clamp(40px,5vw,82px);
 
   font-weight:500;
 
-  letter-spacing:.02em;
-
   line-height:1;
+
+  letter-spacing:.015em;
+
+  text-shadow:
+    0 3px 20px rgba(0,0,0,.45);
 }
+
+/* =========================================
+   LINEA
+========================================= */
 
 .brandLine{
   width:0;
@@ -166,79 +261,128 @@ body{
 
   margin-top:18px;
 
-  background:rgba(255,255,255,.9);
+  background:
+    rgba(255,255,255,.92);
 
   transition:
-    width 1.4s cubic-bezier(.16,1,.3,1) 1s;
+    width 1.3s cubic-bezier(.16,1,.3,1) 1.1s;
 }
 
 .slide.active .brandLine{
-  width:95px;
+  width:100px;
 }
 
-.brandSub{
-  margin-top:12px;
+/* =========================================
+   FRASE
+========================================= */
 
-  font-size:clamp(11px,1.1vw,17px);
+.phrase{
+  margin-top:18px;
+
+  font-family:'Playfair Display',serif;
+
+  font-size:
+    clamp(18px,2vw,32px);
 
   font-weight:400;
 
-  letter-spacing:.38em;
+  line-height:1.35;
 
-  text-transform:uppercase;
+  letter-spacing:.015em;
 
-  opacity:.82;
-}
+  max-width:
+    min(850px,72vw);
 
-/* =========================
-   DESTELLO DE LUZ
-========================= */
+  color:rgba(255,255,255,.94);
 
-.light{
-  position:absolute;
-
-  width:45vw;
-  height:45vw;
-
-  top:-25vw;
-  right:-10vw;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,255,255,.12),
-      transparent 68%
-    );
-
-  filter:blur(10px);
+  text-shadow:
+    0 3px 18px rgba(0,0,0,.55);
 
   opacity:0;
 
-  transform:translate(15vw,8vw);
+  transform:translateY(18px);
 
   transition:
-    opacity 2s ease,
-    transform 10s cubic-bezier(.16,1,.3,1);
+    opacity 1.2s ease 1.3s,
+    transform 1.2s cubic-bezier(.16,1,.3,1) 1.3s;
 }
 
-.slide.active .light{
+.slide.active .phrase{
   opacity:1;
-  transform:translate(-10vw,20vw);
+  transform:translateY(0);
 }
 
-/* =========================
-   INTRO DE MARCA
-========================= */
+/* =========================================
+   SUBTÍTULO
+========================================= */
+
+.subtitle{
+  margin-top:12px;
+
+  font-size:
+    clamp(10px,1vw,15px);
+
+  font-weight:400;
+
+  letter-spacing:.42em;
+
+  text-transform:uppercase;
+
+  opacity:.72;
+}
+
+/* =========================================
+   INDICADORES
+========================================= */
+
+.progress{
+  position:absolute;
+
+  right:5vw;
+  bottom:8vh;
+
+  z-index:30;
+
+  display:flex;
+
+  gap:8px;
+
+  opacity:.65;
+}
+
+.dot{
+  width:5px;
+  height:5px;
+
+  border-radius:50%;
+
+  background:white;
+
+  opacity:.25;
+
+  transition:
+    opacity .5s ease,
+    transform .5s ease;
+}
+
+.dot.active{
+  opacity:1;
+  transform:scale(1.5);
+}
+
+/* =========================================
+   INTRO
+========================================= */
 
 #intro{
   position:absolute;
+
   inset:0;
 
   z-index:100;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -252,15 +396,15 @@ body{
 
 #intro.hidden{
   opacity:0;
+
   pointer-events:none;
 }
 
 .introContent{
   text-align:center;
 
-  transform:translateY(15px);
-
-  animation:introEnter 2s cubic-bezier(.16,1,.3,1) forwards;
+  animation:
+    introEnter 2s cubic-bezier(.16,1,.3,1) forwards;
 }
 
 .introSmall{
@@ -270,7 +414,7 @@ body{
 
   text-transform:uppercase;
 
-  opacity:.6;
+  opacity:.55;
 
   margin-bottom:25px;
 }
@@ -278,7 +422,8 @@ body{
 .introName{
   font-family:'Playfair Display',serif;
 
-  font-size:clamp(50px,7vw,110px);
+  font-size:
+    clamp(52px,7vw,110px);
 
   font-weight:500;
 
@@ -298,6 +443,7 @@ body{
 }
 
 @keyframes introEnter{
+
   from{
     opacity:0;
     transform:translateY(35px);
@@ -307,66 +453,97 @@ body{
     opacity:1;
     transform:translateY(0);
   }
+
 }
 
 @keyframes introLine{
+
   to{
     width:120px;
   }
+
 }
 
-/* =========================
-   INDICADOR DISCRETO
-========================= */
+/* =========================================
+   ESTADO DE CARGA
+========================================= */
 
-.progress{
+#loading{
   position:absolute;
 
-  right:5vw;
-  bottom:7vh;
+  inset:0;
 
-  z-index:30;
+  z-index:90;
 
   display:flex;
-  gap:8px;
 
-  opacity:.7;
+  align-items:center;
+  justify-content:center;
+
+  background:#090909;
+
+  font-family:'Montserrat',sans-serif;
+
+  font-size:13px;
+
+  letter-spacing:.35em;
+
+  text-transform:uppercase;
+
+  opacity:.65;
 }
 
-.dot{
-  width:5px;
-  height:5px;
-
-  border-radius:50%;
-
-  background:white;
-
-  opacity:.35;
-
-  transition:
-    opacity .5s ease,
-    transform .5s ease;
+#loading.hidden{
+  display:none;
 }
 
-.dot.active{
-  opacity:1;
-  transform:scale(1.5);
+/* =========================================
+   ERROR
+========================================= */
+
+#error{
+  position:absolute;
+
+  inset:0;
+
+  z-index:200;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  background:#090909;
+
+  padding:40px;
 }
 
-/* =========================
-   MODO MOVIMIENTO
-========================= */
-
-@media (prefers-reduced-motion: reduce){
-
-  *,
-  *::before,
-  *::after{
-    animation-duration:.01ms !important;
-    transition-duration:.01ms !important;
-  }
-
+#error.visible{
+  display:flex;
 }
+
+.errorContent{
+  max-width:700px;
+}
+
+.errorTitle{
+  font-family:'Playfair Display',serif;
+
+  font-size:48px;
+
+  margin-bottom:20px;
+}
+
+.errorText{
+  font-size:16px;
+
+  opacity:.65;
+
+  line-height:1.7;
+}
+
 </style>
 </head>
 
@@ -374,7 +551,7 @@ body{
 
 <div id="stage">
 
-  <!-- INTRO DE MARCA -->
+  <!-- INTRO -->
 
   <div id="intro">
 
@@ -395,6 +572,13 @@ body{
   </div>
 
 
+  <!-- CARGANDO -->
+
+  <div id="loading">
+    Preparando experiencia
+  </div>
+
+
   <!-- GALERÍA -->
 
   <div id="gallery"></div>
@@ -402,31 +586,162 @@ body{
 
   <!-- INDICADORES -->
 
-  <div class="progress" id="progress"></div>
+  <div
+    class="progress"
+    id="progress">
+  </div>
+
+
+  <!-- ERROR -->
+
+  <div id="error">
+
+    <div class="errorContent">
+
+      <div class="errorTitle">
+        El Spa de Firulais
+      </div>
+
+      <div class="errorText">
+        No fue posible cargar las fotografías.
+        Comprueba la conexión a Internet.
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
+
+
+<!-- =========================================
+     SUPABASE
+========================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
 /* =========================================
-   FOTOGRAFÍAS
+   CONFIGURACIÓN SUPABASE
 ========================================= */
 
-const images = [
+const SUPABASE_URL =
+  "https://oijgqsbltdkdkxasgica.supabase.co";
 
-  "https://oijgqsbltdkdkxasgica.supabase.co/storage/v1/object/public/firulais-tv/local.jpeg"
+const SUPABASE_KEY =
+  "sb_publishable_ax7YtzNJVFrLvuWcegSB0g_H3oNEBDI";
 
-];
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
 /* =========================================
-   CONFIGURACIÓN
+   CONFIGURACIÓN DE PRESENTACIÓN
 ========================================= */
 
-const DISPLAY_TIME = 9000;
+const BUCKET =
+  "firulais-tv";
 
-const TRANSITION_TIME = 2200;
+const DISPLAY_TIME =
+  9000;
+
+
+/* =========================================
+   42 FRASES
+========================================= */
+
+const phrases = [
+
+  "Porque ellos también merecen sentirse especiales.",
+
+  "Un poco de cuidado. Mucho amor.",
+
+  "La belleza está en los pequeños detalles.",
+
+  "Consentirlos también es una forma de decir: te quiero.",
+
+  "Cada Firulais tiene su propia esencia.",
+
+  "Más que una estética, una experiencia.",
+
+  "Donde el cuidado se convierte en cariño.",
+
+  "Tu mejor amigo, en las mejores manos.",
+
+  "Porque su bienestar también importa.",
+
+  "Un momento de cuidado para quien siempre está contigo.",
+
+  "Pequeños detalles. Grandes momentos.",
+
+  "Ellos dan amor todos los días. Hoy les toca recibirlo.",
+
+  "Cuidamos su imagen. Consentimos su corazón.",
+
+  "Una nueva versión de su mejor momento.",
+
+  "Que cada visita sea una experiencia especial.",
+
+  "Belleza que se nota. Cuidado que se siente.",
+
+  "Porque cada mascota merece su momento.",
+
+  "Aquí comienza su momento de consentirse.",
+
+  "El cariño también se demuestra cuidándolos.",
+
+  "Un Firulais feliz siempre luce increíble.",
+
+  "Detalles que hacen la diferencia.",
+
+  "Su felicidad es nuestra mejor recompensa.",
+
+  "Más limpio. Más bonito. Más feliz.",
+
+  "El lugar donde consentirlos es parte del trabajo.",
+
+  "Cada mirada cuenta una historia.",
+
+  "Cuidar de ellos es nuestra pasión.",
+
+  "Donde cada detalle está pensado para ellos.",
+
+  "Porque se merecen mucho más que un baño.",
+
+  "Un cambio de look. La misma personalidad.",
+
+  "Su estilo también habla de ellos.",
+
+  "Que su próximo recuerdo sea sentirse increíble.",
+
+  "Amor, cuidado y mucho estilo.",
+
+  "Aquí cada Firulais recibe su momento de protagonismo.",
+
+  "La diferencia está en cómo los hacemos sentir.",
+
+  "Más guapos. Más felices. Más Firulais.",
+
+  "Un pequeño cambio puede hacerlos brillar.",
+
+  "Ellos confían en nosotros. Y nosotros cuidamos de ellos.",
+
+  "Cada visita, una nueva historia.",
+
+  "Porque consentirlos nunca pasa de moda.",
+
+  "Su mejor versión comienza aquí.",
+
+  "Hecho con paciencia. Hecho con cariño.",
+
+  "El Spa de Firulais — donde ellos son los protagonistas."
+
+];
 
 
 /* =========================================
@@ -439,24 +754,142 @@ const gallery =
 const progress =
   document.getElementById("progress");
 
+const loading =
+  document.getElementById("loading");
+
 const intro =
   document.getElementById("intro");
 
+const errorBox =
+  document.getElementById("error");
 
-let current = 0;
 
 let slides = [];
 
+let current = 0;
+
+let timer = null;
+
 
 /* =========================================
-   CREAR GALERÍA
+   OBTENER FOTOGRAFÍAS DE SUPABASE
 ========================================= */
 
-function buildGallery(){
+async function loadImages(){
+
+  try{
+
+    const { data: files, error } =
+      await supabaseClient
+        .storage
+        .from(BUCKET)
+        .list("", {
+          limit:100,
+          sortBy:{
+            column:"created_at",
+            order:"asc"
+          }
+        });
+
+
+    if(error){
+
+      console.error(
+        "Error cargando fotografías:",
+        error
+      );
+
+      showError();
+
+      return;
+
+    }
+
+
+    if(!files || files.length === 0){
+
+      console.error(
+        "No se encontraron fotografías."
+      );
+
+      showError();
+
+      return;
+
+    }
+
+
+    const imageFiles =
+      files.filter(file => {
+
+        if(!file.name){
+          return false;
+        }
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        return [
+          "jpg",
+          "jpeg",
+          "png",
+          "webp",
+          "avif"
+        ].includes(extension);
+
+      });
+
+
+    if(imageFiles.length === 0){
+
+      showError();
+
+      return;
+
+    }
+
+
+    const images =
+      imageFiles.map(file => {
+
+        const { data } =
+          supabaseClient
+            .storage
+            .from(BUCKET)
+            .getPublicUrl(file.name);
+
+        return data.publicUrl;
+
+      });
+
+
+    buildGallery(images);
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    showError();
+
+  }
+
+}
+
+
+/* =========================================
+   CONSTRUIR GALERÍA
+========================================= */
+
+function buildGallery(images){
 
   gallery.innerHTML = "";
 
   progress.innerHTML = "";
+
 
   images.forEach((url,index)=>{
 
@@ -466,57 +899,102 @@ function buildGallery(){
     slide.className = "slide";
 
     if(index === 0){
+
       slide.classList.add("active");
+
     }
 
 
-    const img =
+    /* Fondo */
+
+    const background =
       document.createElement("img");
 
-    img.className = "photo";
+    background.className =
+      "background";
 
-    img.src = url;
+    background.src = url;
 
-    img.alt = "";
-
-
-    const vignette =
-      document.createElement("div");
-
-    vignette.className = "vignette";
+    background.alt = "";
 
 
-    const bottomFade =
-      document.createElement("div");
+    /* Foto principal */
 
-    bottomFade.className = "bottomFade";
+    const photo =
+      document.createElement("img");
 
+    photo.className =
+      "photo";
+
+    photo.src = url;
+
+    photo.alt = "";
+
+
+    /* Luz */
 
     const light =
       document.createElement("div");
 
-    light.className = "light";
+    light.className =
+      "light";
 
+
+    /* Vignette */
+
+    const vignette =
+      document.createElement("div");
+
+    vignette.className =
+      "vignette";
+
+
+    /* Degradado */
+
+    const bottomFade =
+      document.createElement("div");
+
+    bottomFade.className =
+      "bottomFade";
+
+
+    /* Marca */
 
     const brand =
       document.createElement("div");
 
-    brand.className = "brand";
+    brand.className =
+      "brand";
+
+
+    const phrase =
+      phrases[
+        index % phrases.length
+      ];
+
 
     brand.innerHTML = `
+
       <div class="brandName">
         El Spa de Firulais
       </div>
 
       <div class="brandLine"></div>
 
-      <div class="brandSub">
+      <div class="phrase">
+        ${phrase}
+      </div>
+
+      <div class="subtitle">
         Belleza · Cuidado · Consentimiento
       </div>
+
     `;
 
 
-    slide.appendChild(img);
+    slide.appendChild(background);
+
+    slide.appendChild(photo);
 
     slide.appendChild(light);
 
@@ -530,13 +1008,17 @@ function buildGallery(){
     gallery.appendChild(slide);
 
 
+    /* Indicador */
+
     const dot =
       document.createElement("div");
 
     dot.className = "dot";
 
     if(index === 0){
+
       dot.classList.add("active");
+
     }
 
     progress.appendChild(dot);
@@ -546,11 +1028,38 @@ function buildGallery(){
 
   slides =
     document.querySelectorAll(".slide");
+
+
+  loading.classList.add("hidden");
+
+
+  startPresentation();
+
 }
 
 
 /* =========================================
-   CAMBIAR FOTOGRAFÍA
+   PRESENTACIÓN
+========================================= */
+
+function startPresentation(){
+
+  if(timer){
+    clearInterval(timer);
+  }
+
+
+  timer =
+    setInterval(
+      nextSlide,
+      DISPLAY_TIME
+    );
+
+}
+
+
+/* =========================================
+   SIGUIENTE FOTO
 ========================================= */
 
 function nextSlide(){
@@ -560,24 +1069,31 @@ function nextSlide(){
   }
 
 
+  const dots =
+    document.querySelectorAll(".dot");
+
+
   slides[current]
     .classList
     .remove("active");
 
 
-  const dots =
-    document.querySelectorAll(".dot");
+  if(dots[current]){
 
-  dots[current]
-    .classList
-    .remove("active");
+    dots[current]
+      .classList
+      .remove("active");
+
+  }
 
 
   current++;
 
 
   if(current >= slides.length){
+
     current = 0;
+
   }
 
 
@@ -586,22 +1102,39 @@ function nextSlide(){
     .add("active");
 
 
-  dots[current]
-    .classList
-    .add("active");
+  if(dots[current]){
+
+    dots[current]
+      .classList
+      .add("active");
+
+  }
 
 }
 
 
 /* =========================================
-   INICIALIZACIÓN
+   ERROR
 ========================================= */
 
-buildGallery();
+function showError(){
+
+  loading.classList.add("hidden");
+
+  errorBox.classList.add("visible");
+
+}
 
 
 /* =========================================
-   INTRO → GALERÍA
+   INICIAR
+========================================= */
+
+loadImages();
+
+
+/* =========================================
+   INTRO
 ========================================= */
 
 setTimeout(()=>{
@@ -612,13 +1145,16 @@ setTimeout(()=>{
 
 
 /* =========================================
-   CICLO DE FOTOGRAFÍAS
+   RECARGAR GALERÍA PERIÓDICAMENTE
+   Si agregas una foto nueva, la TV podrá
+   detectarla automáticamente.
 ========================================= */
 
-setInterval(
-  nextSlide,
-  DISPLAY_TIME
-);
+setInterval(()=>{
+
+  loadImages();
+
+},60000);
 
 </script>
 
