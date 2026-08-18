@@ -290,6 +290,25 @@ function deleteAppointment(){
   persist();closeModal();render();
 }
 function persist(){localStorage.setItem("firulaisAgenda",JSON.stringify(data))}
+async function loadFromSupabase(){
+  const { data: rows, error } = await supabaseClient
+    .from("citas")
+    .select("appointment_key,data");
+
+  if(error){
+    console.error("Error cargando citas desde Supabase:", error);
+    return;
+  }
+
+  rows.forEach(row=>{
+    if(row.appointment_key && row.data){
+      data[row.appointment_key]=row.data;
+    }
+  });
+
+  persist();
+  render();
+}
 function clearWeek(){if(!confirm("¿Borrar todas las citas de esta semana?"))return;const wk=weekKey();Object.keys(data).forEach(k=>{if(k.startsWith(wk+"|"))delete data[k]});persist();render()}
 function changeWeek(n){weekOffset+=n;render()}
 
@@ -552,7 +571,7 @@ buildPetPicker('petPicker','petType');
 buildPetPicker('petPicker2','petType2');
 setPetType('dog','petType');
 setPetType('dog','petType2');
-render();
+loadFromSupabase();
 </script>
 </body>
 </html>
