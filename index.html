@@ -314,11 +314,28 @@ async function loadFromSupabase(){
     return;
   }
 
+  async function loadFromSupabase(){
+  const { data: rows, error } = await supabaseClient
+    .from("citas")
+    .select("appointment_key,data");
+
+  if(error){
+    console.error("Error cargando citas desde Supabase:", error);
+    return;
+  }
+
+  const cloudData={};
+
   rows.forEach(row=>{
     if(row.appointment_key && row.data){
-      data[row.appointment_key]=row.data;
+      cloudData[row.appointment_key]=row.data;
     }
   });
+
+  data=cloudData;
+  persist();
+  render();
+}
 
   persist();
   render();
