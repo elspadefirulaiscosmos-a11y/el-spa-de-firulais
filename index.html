@@ -101,6 +101,17 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+supabaseClient
+  .from("Citas")
+  .select("id")
+  .limit(1)
+  .then(({ data, error }) => {
+    if (error) {
+      console.error("Error conectando con Supabase:", error);
+    } else {
+      console.log("✅ Supabase conectado correctamente");
+    }
+  });
   
 let weekOffset=0, data=JSON.parse(localStorage.getItem("firulaisAgenda")||"{}"), currentKey=null;
 
