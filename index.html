@@ -235,8 +235,7 @@ function openModal(di,t){
   document.getElementById("modalBack").style.display="flex";
 }
 function closeModal(){document.getElementById("modalBack").style.display="none";currentKey=null}
-function saveAppointment(){
-  if(!currentKey)return;
+async function saveAppointment(){  if(!currentKey)return;
   const name1=document.getElementById("petName").value.trim();
   const petType1=document.getElementById("petType").value||"dog";
   const name2=document.getElementById("petName2").value.trim();
@@ -272,6 +271,12 @@ function saveAppointment(){
     duration,
     start
   };
+  await supabaseClient
+  .from("citas")
+  .upsert({
+    appointment_key: currentKey,
+    data: data[currentKey]
+  });
   persist();closeModal();render();
 }
 function deleteAppointment(){
