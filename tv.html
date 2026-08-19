@@ -63,6 +63,19 @@ body{
 
 .slide.active{
   opacity:1;
+  .slide:not(.active) .brand{
+  opacity:0;
+  transform:translateY(35px);
+}
+
+.slide:not(.active) .phrase{
+  opacity:0;
+  transform:translateY(18px);
+}
+
+.slide:not(.active) .brandLine{
+  width:0;
+}
 }
 
 /* =========================================
@@ -1068,50 +1081,43 @@ function nextSlide(){
     return;
   }
 
+  const previous =
+    slides[current];
 
   const dots =
     document.querySelectorAll(".dot");
 
-
-  slides[current]
-    .classList
-    .remove("active");
-
+  previous.classList.remove("active");
 
   if(dots[current]){
-
-    dots[current]
-      .classList
-      .remove("active");
-
+    dots[current].classList.remove("active");
   }
-
 
   current++;
 
-
   if(current >= slides.length){
-
     current = 0;
-
   }
 
+  const next =
+    slides[current];
 
-  slides[current]
-    .classList
-    .add("active");
+  /*
+    Reiniciamos completamente
+    la animación de la nueva diapositiva.
+  */
 
+  next.classList.remove("active");
+
+  void next.offsetWidth;
+
+  next.classList.add("active");
 
   if(dots[current]){
-
-    dots[current]
-      .classList
-      .add("active");
-
+    dots[current].classList.add("active");
   }
 
 }
-
 
 /* =========================================
    ERROR
