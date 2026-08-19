@@ -195,361 +195,565 @@ function loadImage(src){
   });
 }
 async function downloadImage(type){
-  const jpg = type === "calendarJpg";
+  const jpg = type==="calendarJpg";
 
-  // Formato horizontal basado en la plantilla del calendario.
+  // Formato horizontal para el calendario descargable
   const w = 1536;
   const h = 1024;
 
   const c = document.createElement("canvas");
   c.width = w;
   c.height = h;
+
   const ctx = c.getContext("2d");
 
   try{
     const logo = await loadImage(LOGO);
 
-    drawFullCalendarStory(ctx,w,h,logo);
+    drawFullCalendarStory(ctx,w,h,logo,{});
 
     const mime = jpg ? "image/jpeg" : "image/png";
+
     const dataUrl = c.toDataURL(
       mime,
       jpg ? 0.96 : undefined
     );
 
     const a = document.createElement("a");
+
     a.href = dataUrl;
+
     a.download = jpg
       ? "El_Spa_de_Firulais_Calendario.jpg"
       : "El_Spa_de_Firulais_Calendario.png";
+
     a.style.display = "none";
+
     document.body.appendChild(a);
+
     a.click();
 
-    setTimeout(()=>a.remove(),1000);
+    setTimeout(()=>{
+      a.remove();
+    },1000);
 
   }catch(err){
-    console.error("Error al descargar calendario:",err);
-    alert("No se pudo generar la imagen. Recarga la página y vuelve a intentarlo.");
+
+    console.error(
+      "Error al descargar calendario:",
+      err
+    );
+
+    alert(
+      "No se pudo generar la imagen. Recarga la página y vuelve a intentarlo."
+    );
   }
 }
 
-function drawFullCalendarStory(ctx,w,h,logo){
-  // =====================================================
-  // PALETA Y FONDO
-  // =====================================================
-  const pink = "#e96891";
-  const pinkLight = "#f8b4c8";
-  const pinkSoft = "#fff7fa";
-  const line = "#edb8c9";
-  const dark = "#181318";
-  const gray = "#514a4e";
+function drawFullCalendarStory(ctx,w,h,logo,petImages){
 
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = "#ffffff";
+  // Fondo
+  ctx.fillStyle = "#fff7fa";
   ctx.fillRect(0,0,w,h);
 
-  // =====================================================
-  // UTILIDADES DE DIBUJO
-  // =====================================================
-  function rr(x,y,width,height,r,fill,stroke,strokeWidth=1){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y);
-    ctx.arcTo(x+width,y,x+width,y+height,r);
-    ctx.arcTo(x+width,y+height,x,y+height,r);
-    ctx.arcTo(x,y+height,x,y,r);
-    ctx.arcTo(x,y,x+width,y,r);
-    ctx.closePath();
-    if(fill){ctx.fillStyle=fill;ctx.fill();}
-    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=strokeWidth;ctx.stroke();}
-  }
+  // Tarjeta principal
+  ctx.fillStyle = "#ffffff";
 
-  function lineTo(x1,y1,x2,y2,color,width=1){
-    ctx.beginPath();
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-    ctx.strokeStyle=color;
-    ctx.lineWidth=width;
-    ctx.stroke();
-  }
+  roundRect(
+    ctx,
+    28,
+    25,
+    w-56,
+    h-50,
+    30,
+    true
+  );
 
-  function paw(x,y,size,alpha=1){
-    ctx.save();
-    ctx.globalAlpha=alpha;
-    ctx.fillStyle=pinkLight;
-    ctx.beginPath();
-    ctx.ellipse(x,y+size*.30,size*.34,size*.27,-.15,0,Math.PI*2);
-    ctx.fill();
-    [[-.36,-.18],[-.12,-.42],[.18,-.44],[.43,-.18]].forEach(([dx,dy],i)=>{
-      ctx.beginPath();
-      ctx.ellipse(x+dx*size,y+dy*size,size*.12,size*.16,[-.35,-.12,.12,.35][i],0,Math.PI*2);
-      ctx.fill();
-    });
-    ctx.restore();
-  }
 
-  function bubble(x,y,r,alpha=.55){
-    ctx.save();
-    ctx.globalAlpha=alpha;
-    ctx.strokeStyle="#b9d7e4";
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.stroke();
-    ctx.restore();
-  }
+  // =========================
+  // ENCABEZADO
+  // =========================
 
-  function heart(x,y,size,color=pinkLight,alpha=1){
-    ctx.save();
-    ctx.globalAlpha=alpha;
-    ctx.strokeStyle=color;
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.moveTo(x,y+size*.30);
-    ctx.bezierCurveTo(x-size*.70,y-size*.05,x-size*.55,y-size*.70,x,y-size*.25);
-    ctx.bezierCurveTo(x+size*.55,y-size*.70,x+size*.70,y-size*.05,x,y+size*.30);
-    ctx.stroke();
-    ctx.restore();
-  }
+  ctx.drawImage(
+    logo,
+    55,
+    55,
+    120,
+    120
+  );
 
-  function clock(x,y,r){
-    ctx.save();
-    ctx.strokeStyle=pink;
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x,y-r*.58);
-    ctx.moveTo(x,y);
-    ctx.lineTo(x+r*.43,y+r*.22);
-    ctx.stroke();
-    ctx.restore();
-  }
+  ctx.fillStyle = "#542b3a";
+  ctx.textAlign = "left";
 
-  function calendarIcon(x,y,size){
-    ctx.save();
-    ctx.strokeStyle=pink;
-    ctx.lineWidth=4;
-    rr(x,y,size,size*.78,8,null,pink,4);
-    lineTo(x,y+size*.22,x+size,y+size*.22,pink,4);
-    lineTo(x+size*.25,y-5,x+size*.25,y+size*.10,pink,5);
-    lineTo(x+size*.75,y-5,x+size*.75,y+size*.10,pink,5);
-    ctx.fillStyle=pink;
-    const s=size*.11;
-    for(let r=0;r<3;r++){
-      for(let col=0;col<3;col++){
-        ctx.fillRect(x+size*.22+col*size*.25,y+size*.35+r*size*.14,s,s);
-      }
-    }
-    ctx.restore();
-  }
+  ctx.font = "bold 42px Arial";
 
-  function fitText(text,maxWidth,startSize,family="Arial",weight="400"){
-    let size=startSize;
-    do{
-      ctx.font=`${weight} ${size}px ${family}`;
-      size--;
-    }while(ctx.measureText(text).width>maxWidth && size>12);
-    return size;
-  }
+  ctx.fillText(
+    "El Spa de Firulais",
+    195,
+    92
+  );
 
-  // =====================================================
-  // DECORACIÓN DEL FONDO
-  // =====================================================
-  paw(70,110,95,.75);
-  paw(1460,100,95,.75);
-  paw(125,930,85,.75);
-  paw(1415,925,82,.75);
-  bubble(48,42,13,.7);
-  bubble(83,36,9,.55);
-  bubble(1485,185,15,.7);
-  bubble(1455,215,8,.55);
-  bubble(38,965,10,.6);
-  bubble(278,975,18,.55);
-  heart(403,160,26,pink,.75);
-  heart(1010,160,26,pink,.75);
+  ctx.fillStyle = "#8a6674";
 
-  // =====================================================
-  // LOGO
-  // =====================================================
-  const logoBox = {x:105,y:14,w:235,h:190};
-  ctx.drawImage(logo,logoBox.x,logoBox.y,logoBox.w,logoBox.h);
+  ctx.font = "24px Arial";
 
-  // =====================================================
-  // TÍTULO
-  // =====================================================
-  ctx.textAlign="center";
-  ctx.textBaseline="alphabetic";
-  ctx.fillStyle=dark;
-  ctx.font="700 53px 'Arial Narrow',Arial,sans-serif";
-  ctx.fillText("HORARIO DE CITAS",760,77);
+  ctx.fillText(
+    "DISPONIBILIDAD DE LA SEMANA",
+    195,
+    130
+  );
 
-  // pequeños trazos decorativos del título
-  lineTo(395,64,418,55,pink,5);
-  lineTo(405,82,427,82,pink,5);
-  lineTo(1005,55,1028,66,pink,5);
-  lineTo(1000,82,1025,82,pink,5);
+  ctx.fillStyle = "#e96891";
 
-  ctx.fillStyle=dark;
-  ctx.font="italic 25px 'Trebuchet MS',Arial,sans-serif";
-  ctx.fillText("Cuidado, amor y relajación para tu mejor amigo",700,133);
+  ctx.font = "bold 20px Arial";
 
-  heart(424,139,21,pink,.8);
-  heart(1020,139,21,pink,.8);
+  ctx.fillText(
+    `${fmt(dateFor(0))} – ${fmt(dateFor(5))}`,
+    195,
+    163
+  );
 
-  // =====================================================
-  // RANGO DE FECHAS
-  // =====================================================
-  const rangeX=1060;
-  const rangeY=38;
-  const rangeW=378;
-  const rangeH=150;
 
-  rr(rangeX,rangeY,rangeW,rangeH,23,"#fffdfd",line,2);
-
-  ctx.textAlign="left";
-  ctx.fillStyle=dark;
-  ctx.font="700 22px 'Arial Narrow',Arial,sans-serif";
-  ctx.fillText("DEL:",1085,80);
-  ctx.fillText("AL:",1085,140);
-
-  const fromText=fmt(dateFor(0));
-  const toText=fmt(dateFor(5));
-
-  lineTo(1145,82,1322,82,line,2);
-  lineTo(1145,142,1322,142,line,2);
-
-  ctx.fillStyle=dark;
-  ctx.font="400 18px Arial,sans-serif";
-  ctx.textAlign="left";
-  ctx.fillText(fromText,1153,76);
-  ctx.fillText(toText,1153,136);
-
-  calendarIcon(1350,72,53);
-
-  // =====================================================
+  // =========================
   // CALENDARIO
-  // =====================================================
-  const left=24;
-  const top=220;
-  const timeW=216;
-  const right=25;
-  const headerH=60;
-  const rowH=100;
-  const dayW=(w-left-right-timeW)/6;
+  // =========================
 
-  // Encabezados
-  ctx.fillStyle=pink;
-  rr(left,top,timeW,headerH,14,pink,null);
+  const left = 45;
+  const right = 45;
 
+  const top = 205;
+
+  const timeW = 125;
+
+  const headerH = 62;
+
+  const dayW =
+    (w-left-right-timeW)/6;
+
+  const rowH = 105;
+
+
+  // Encabezado HORA
+  ctx.fillStyle = "#fff0f6";
+
+  roundRect(
+    ctx,
+    left,
+    top,
+    timeW,
+    headerH,
+    10,
+    true
+  );
+
+  ctx.fillStyle = "#542b3a";
+
+  ctx.textAlign = "center";
+
+  ctx.font = "bold 18px Arial";
+
+  ctx.fillText(
+    "HORA",
+    left + timeW/2,
+    top + 39
+  );
+
+
+  // Días
   days.forEach((d,i)=>{
-    const x=left+timeW+i*dayW;
-    rr(x,top,dayW,headerH,0,pink,null);
+
+    const x =
+      left +
+      timeW +
+      i*dayW;
+
+    ctx.fillStyle = "#fff0f6";
+
+    ctx.fillRect(
+      x,
+      top,
+      dayW,
+      headerH
+    );
+
+    ctx.fillStyle = "#542b3a";
+
+    ctx.font = "bold 16px Arial";
+
+    ctx.fillText(
+      d.toUpperCase(),
+      x + dayW/2,
+      top + 39
+    );
+
   });
 
-  ctx.fillStyle="#ffffff";
-  ctx.textAlign="center";
-  ctx.font="700 25px 'Arial Narrow',Arial,sans-serif";
-  ctx.fillText("HORA",left+timeW/2,top+38);
 
-  days.forEach((d,i)=>{
-    const x=left+timeW+i*dayW;
-    ctx.fillText(d.toUpperCase(),x+dayW/2,top+38);
-  });
+  // =========================
+  // FILAS DE HORARIOS
+  // =========================
 
-  // Filas y horarios
-  normalTimes.forEach((t,r)=>{
-    const y=top+headerH+r*rowH;
+  const times = normalTimes;
 
-    // celda de hora
-    ctx.fillStyle="#fffdfd";
-    ctx.fillRect(left,y,timeW,rowH);
-    ctx.strokeStyle=line;
-    ctx.lineWidth=1.2;
-    ctx.strokeRect(left,y,timeW,rowH);
+  times.forEach((t,r)=>{
 
-    ctx.fillStyle=dark;
-    ctx.textAlign="left";
-    ctx.font="400 27px Arial,sans-serif";
-    ctx.fillText(displayTime(t),48,y+47);
+    const y =
+      top +
+      headerH +
+      r*rowH;
 
-    clock(207,y+45,15);
 
-    // celdas de días
+    // Hora
+    ctx.fillStyle = "#ffffff";
+
+    ctx.fillRect(
+      left,
+      y,
+      timeW,
+      rowH
+    );
+
+    ctx.strokeStyle = "#ead9e0";
+
+    ctx.lineWidth = 1;
+
+    ctx.strokeRect(
+      left,
+      y,
+      timeW,
+      rowH
+    );
+
+
+    ctx.fillStyle = "#765865";
+
+    ctx.font = "17px Arial";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+      displayTime(t),
+      left + timeW/2,
+      y + 44
+    );
+
+
+    // Celdas de cada día
     for(let di=0;di<6;di++){
-      const x=left+timeW+di*dayW;
-      const available=!!timesFor(di)[r];
 
-      ctx.fillStyle=available ? "#ffffff" : "#fbf8f9";
-      ctx.fillRect(x,y,dayW,rowH);
-      ctx.strokeStyle=line;
-      ctx.lineWidth=1.2;
-      ctx.strokeRect(x,y,dayW,rowH);
+      const x =
+        left +
+        timeW +
+        di*dayW;
 
-      if(!available) continue;
+      ctx.fillStyle = "#ffffff";
 
-      const a=data[key(di,t)];
-      if(!a || a.start!==t) continue;
+      ctx.fillRect(
+        x,
+        y,
+        dayW,
+        rowH
+      );
 
-      // Tarjeta limpia: SOLO el nombre, sin animalito/sticker.
-      rr(x+8,y+8,dayW-16,rowH-16,10,"#fffdfd","#f0b4c6",1.5);
+      ctx.strokeStyle = "#ead9e0";
 
-      const name=String(a.name||"");
-      const fontSize=fitText(name,dayW-38,25,"Arial","700");
+      ctx.strokeRect(
+        x,
+        y,
+        dayW,
+        rowH
+      );
 
-      ctx.fillStyle=dark;
-      ctx.textAlign="center";
-      ctx.font=`700 ${fontSize}px Arial,sans-serif`;
-      ctx.fillText(name,x+dayW/2,y+58);
     }
+
   });
 
-  // =====================================================
-  // NOTA DE SÁBADO
-  // =====================================================
-  const noteX=484;
-  const noteY=914;
-  const noteW=500;
-  const noteH=76;
 
-  rr(noteX,noteY,noteW,noteH,20,"#fffdfd",line,1.5);
+  // =========================
+  // SÁBADO DESPUÉS DE LAS 4 PM
+  // =========================
 
-  ctx.textAlign="left";
-  ctx.fillStyle=pink;
-  ctx.font="400 31px Arial,sans-serif";
-  ctx.fillText("♥",514,959);
+  for(
+    let r=saturdayTimes.length;
+    r<times.length;
+    r++
+  ){
 
-  ctx.fillStyle=dark;
-  ctx.font="700 21px 'Arial Narrow',Arial,sans-serif";
-  ctx.fillText("SÁBADO: ÚLTIMO TURNO",563,946);
+    const y =
+      top +
+      headerH +
+      r*rowH;
 
-  ctx.fillStyle=pink;
-  ctx.font="700 21px 'Arial Narrow',Arial,sans-serif";
-  ctx.fillText("3:00 P.M.",820,946);
+    const x =
+      left +
+      timeW +
+      5*dayW;
 
-  ctx.fillStyle=dark;
-  ctx.font="400 18px Arial,sans-serif";
-  ctx.fillText("Cerramos a las 4:00 p.m.",640,972);
+    ctx.fillStyle = "#faf7f9";
 
-  // =====================================================
-  // MENSAJE FINAL
-  // =====================================================
-  ctx.textAlign="center";
-  ctx.fillStyle=dark;
-  ctx.font="italic 23px 'Trebuchet MS',Arial,sans-serif";
-  ctx.fillText("¡Gracias por confiar",1260,949);
-  ctx.fillText("en nosotros!",1260,978);
-  heart(1350,966,20,pink,.8);
+    ctx.fillRect(
+      x+1,
+      y+1,
+      dayW-2,
+      rowH-2
+    );
 
-  // =====================================================
-  // ÚLTIMO DETALLE DECORATIVO
-  // =====================================================
-  paw(70,950,48,.5);
-  paw(1470,950,48,.5);
+  }
+
+
+  // =========================
+  // CITAS
+  // =========================
+
+  const colorMap = {
+
+    30:"#f8d8e4",
+    60:"#cfe8ff",
+    90:"#fff0b8",
+    120:"#cfeccf",
+    150:"#e3d4f7",
+    180:"#ffd9bd",
+    210:"#c9eee9",
+    240:"#d8e2ff",
+    270:"#f5d2e8",
+    300:"#e7e3bd",
+    330:"#cde3d0",
+    360:"#d3d8f4",
+    390:"#f2d3c5",
+    420:"#c9e5ed",
+    450:"#ead1ef",
+    480:"#e4d8c7"
+
+  };
+
+
+  const jobs=[];
+
+
+  for(
+    let di=0;
+    di<6;
+    di++
+  ){
+
+    const timesDay =
+      timesFor(di);
+
+    timesDay.forEach(
+      (t,idx)=>{
+
+        const a =
+          data[key(di,t)];
+
+        if(
+          a &&
+          a.start===t
+        ){
+
+          jobs.push({
+            a,
+            di,
+            idx
+          });
+
+        }
+
+      }
+    );
+
+  }
+
+
+  for(const job of jobs){
+
+    const {
+      a,
+      di,
+      idx
+    } = job;
+
+
+    const visualSlots =
+      Math.ceil(
+        (Number(a.duration)||60)
+        / GRID_MINUTES
+      );
+
+
+    const x =
+      left +
+      timeW +
+      di*dayW;
+
+
+    const y =
+      top +
+      headerH +
+      idx*rowH;
+
+
+    const height =
+      Math.max(
+        rowH,
+        visualSlots*rowH
+      ) - 8;
+
+
+    // Fondo de la cita
+    ctx.fillStyle =
+      colorMap[a.duration]
+      || "#ffd6e3";
+
+
+    roundRect(
+      ctx,
+      x+5,
+      y+5,
+      dayW-10,
+      height,
+      12,
+      true
+    );
+
+
+    // Nombre de la mascota
+    // En la imagen descargada NO se muestran stickers ni animalitos.
+    ctx.fillStyle =
+      "#542b3a";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.font =
+      "bold 20px Arial";
+
+
+    let name =
+      String(a.name || "");
+
+
+    // Ajustar nombres largos al ancho de la celda
+    while(
+      ctx.measureText(name).width >
+      dayW-24 &&
+      name.length>5
+    ){
+
+      name =
+        name.slice(0,-1);
+
+    }
+
+
+    if(
+      name !== String(a.name || "")
+    ){
+
+      name += "...";
+
+    }
+
+
+    ctx.fillText(
+      name,
+      x + dayW/2,
+      y + 35
+    );
+
+
+    // Duración
+    ctx.font =
+      "16px Arial";
+
+    ctx.fillText(
+      formatDuration(a.duration),
+      x+13,
+      y+68
+    );
+
+
+    // Hora de término
+    ctx.font =
+      "bold 14px Arial";
+
+    ctx.fillText(
+      "Termina " +
+      displayTime(
+        addMinutes(
+          a.start,
+          a.duration
+        )
+      ),
+      x+13,
+      y+91
+    );
+
+  }
+
+
+  // =========================
+  // LEYENDA
+  // =========================
+
+  const legendY =
+    Math.min(
+      h-115,
+      top +
+      headerH +
+      times.length*rowH +
+      20
+    );
+
+
+  ctx.textAlign =
+    "left";
+
+  ctx.fillStyle =
+    "#765865";
+
+  ctx.font =
+    "bold 15px Arial";
+
+
+  ctx.fillText(
+    "COLORES SEGÚN DURACIÓN:",
+    left,
+    legendY
+  );
+
+
+  ctx.font =
+    "14px Arial";
+
+
+  ctx.fillText(
+    "1 h · 1 h 30 · 2 h · 2 h 30 · 3 h · 4 h · 8 h",
+    left,
+    legendY+27
+  );
+
+
+  // =========================
+  // PIE
+  // =========================
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillStyle =
+    "#e96891";
+
+  ctx.font =
+    "italic bold 25px Arial";
+
+
+  ctx.fillText(
+    "Agenda tu cita 🐾",
+    w/2,
+    h-45
+  );
+
 }
-
 function roundRect(ctx,x,y,w,h,r,fill){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();else ctx.stroke()}
 buildPetPicker();
 setPetType('dog');
